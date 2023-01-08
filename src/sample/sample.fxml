@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="532.0" prefWidth="781.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="466.0" fitWidth="762.0" layoutX="14.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@USmap.jpg" />
+         </image>
+      </ImageView>
+      <Pane layoutX="635.0" layoutY="180.0" prefHeight="50.0" prefWidth="100.0">
+         <children>
+            <Label fx:id="USE_TEXT" layoutX="29.0" layoutY="14.0" prefHeight="26.0" prefWidth="71.0" text="New York" textFill="#080000">
+               <font>
+                  <Font name="Constantia" size="14.0" />
+               </font>
+            </Label>
+            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="27.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </Pane>
+      <Pane layoutX="585.0" layoutY="418.0" prefHeight="50.0" prefWidth="118.0">
+         <children>
+            <Label fx:id="NYC" layoutX="21.0" layoutY="1.0" prefHeight="26.0" prefWidth="71.0" text="Miami" textFill="#080000">
+               <font>
+                  <Font name="Constantia" size="14.0" />
+               </font>
+            </Label>
+            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="27.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </Pane>
+      <Pane layoutX="516.0" layoutY="321.0" prefHeight="50.0" prefWidth="118.0">
+         <children>
+            <Label fx:id="ATL" layoutX="21.0" layoutY="1.0" prefHeight="26.0" prefWidth="71.0" text="Atlanta" textFill="#080000">
+               <font>
+                  <Font name="Constantia" size="14.0" />
+               </font>
+            </Label>
+            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="27.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </Pane>
+      <Pane layoutX="456.0" layoutY="197.0" prefHeight="50.0" prefWidth="118.0">
+         <children>
+            <Label fx:id="CHI" layoutX="21.0" layoutY="1.0" prefHeight="26.0" prefWidth="71.0" text="Chicago" textFill="#080000">
+               <font>
+                  <Font name="Constantia" size="14.0" />
+               </font>
+            </Label>
+            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="27.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </Pane>
+      <Pane layoutX="390.0" layoutY="139.0" prefHeight="50.0" prefWidth="118.0">
+         <children>
+            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="27.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </Pane>
+      <Pane layoutX="260.0" layoutY="222.0" prefHeight="50.0" prefWidth="118.0">
+         <children>
+            <Label fx:id="CHI2" layoutX="24.0" layoutY="12.0" prefHeight="26.0" prefWidth="71.0" text="Denver" textFill="#080000">
+               <font>
+                  <Font name="Constantia" size="14.0" />
+               </font>
+            </Label>
+            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </Pane>
+      <Pane layoutX="98.0" layoutY="288.0" prefHeight="50.0" prefWidth="111.0">
+         <children>
+            <Label fx:id="CHI21" layoutY="1.0" prefHeight="26.0" prefWidth="77.0" text="Los Angeles" textFill="#080000">
+               <font>
+                  <Font name="Constantia" size="14.0" />
+               </font>
+            </Label>
+            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </Pane>
+      <Pane layoutX="44.0" layoutY="222.0" prefHeight="50.0" prefWidth="118.0">
+         <children>
+            <Label fx:id="CHI22" layoutX="24.0" layoutY="12.0" prefHeight="26.0" prefWidth="100.0" text="San Francisco" textFill="#080000">
+               <font>
+                  <Font name="Constantia" size="14.0" />
+               </font>
+            </Label>
+            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </Pane>
+      <Pane layoutX="57.0" layoutY="82.0" prefHeight="50.0" prefWidth="118.0">
+         <children>
+            <Label fx:id="CHI23" layoutX="24.0" layoutY="12.0" prefHeight="26.0" prefWidth="71.0" text="Portland" textFill="#080000">
+               <font>
+                  <Font name="Constantia" size="14.0" />
+               </font>
+            </Label>
+            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </Pane>
+      <Pane layoutX="216.0" layoutY="114.0" prefHeight="50.0" prefWidth="118.0">
+         <children>
+            <Label fx:id="CHI24" layoutX="24.0" layoutY="12.0" prefHeight="26.0" prefWidth="71.0" text="Hellena" textFill="#080000">
+               <font>
+                  <Font name="Constantia" size="14.0" />
+               </font>
+            </Label>
+            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </Pane>
+      <Pane layoutX="175.0" layoutY="197.0" prefHeight="50.0" prefWidth="118.0">
+         <children>
+            <Label fx:id="CHI25" layoutX="24.0" layoutY="12.0" prefHeight="26.0" prefWidth="71.0" text="Salt Lake" textFill="#080000">
+               <font>
+                  <Font name="Constantia" size="14.0" />
+               </font>
+            </Label>
+            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </Pane>
+      <Pane layoutX="150.0" layoutY="303.0" prefHeight="50.0" prefWidth="118.0">
+         <children>
+            <Label fx:id="CHI251" layoutX="24.0" layoutY="12.0" prefHeight="26.0" prefWidth="71.0" text="Phoenix" textFill="#080000">
+               <font>
+                  <Font name="Constantia" size="14.0" />
+               </font>
+            </Label>
+            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </Pane>
+      <Pane layoutX="350.0" layoutY="278.0" prefHeight="50.0" prefWidth="118.0">
+         <children>
+            <Label fx:id="CHI252" layoutX="24.0" layoutY="3.0" prefHeight="44.0" prefWidth="71.0" text="Oklahoma City" textFill="#080000" wrapText="true">
+               <font>
+                  <Font name="Constantia" size="14.0" />
+               </font>
+            </Label>
+            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </Pane>
+      <Label fx:id="CHI1" layoutX="410.0" layoutY="120.0" prefHeight="59.0" prefWidth="77.0" text="Minneapolis" textAlignment="CENTER" textFill="#080000" wrapText="true">
+         <font>
+            <Font name="Constantia" size="14.0" />
+         </font>
+      </Label>
+      <Pane layoutX="369.0" layoutY="380.0" prefHeight="50.0" prefWidth="118.0">
+         <children>
+            <Label fx:id="CHI2511" layoutX="24.0" layoutY="12.0" prefHeight="26.0" prefWidth="71.0" text="Huston" textFill="#080000">
+               <font>
+                  <Font name="Constantia" size="14.0" />
+               </font>
+            </Label>
+            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
