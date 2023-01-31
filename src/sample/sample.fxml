@@ -6,10 +6,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="532.0" prefWidth="781.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="551.0" prefWidth="781.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fitHeight="466.0" fitWidth="762.0" layoutX="14.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -46,107 +46,59 @@
             <Circle fill="#ff1f1f" layoutX="14.0" layoutY="27.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
          </children>
       </Pane>
-      <Pane layoutX="456.0" layoutY="197.0" prefHeight="50.0" prefWidth="118.0">
-         <children>
-            <Label fx:id="CHI" layoutX="21.0" layoutY="1.0" prefHeight="26.0" prefWidth="71.0" text="Chicago" textFill="#080000">
-               <font>
-                  <Font name="Constantia" size="14.0" />
-               </font>
-            </Label>
-            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="27.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
-         </children>
-      </Pane>
-      <Pane layoutX="390.0" layoutY="139.0" prefHeight="50.0" prefWidth="118.0">
+      <Label fx:id="CHI" layoutX="477.0" layoutY="196.0" prefHeight="28.0" prefWidth="71.0" text="Chicago" textFill="#080000">
+         <font>
+            <Font name="Constantia" size="14.0" />
+         </font>
+      </Label>
+      <Circle fill="#ff1f1f" layoutX="470.0" layoutY="224.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+      <Pane layoutX="378.0" layoutY="127.0" prefHeight="50.0" prefWidth="118.0">
          <children>
             <Circle fill="#ff1f1f" layoutX="14.0" layoutY="27.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
          </children>
       </Pane>
       <Pane layoutX="260.0" layoutY="222.0" prefHeight="50.0" prefWidth="118.0">
          <children>
-            <Label fx:id="CHI2" layoutX="24.0" layoutY="12.0" prefHeight="26.0" prefWidth="71.0" text="Denver" textFill="#080000">
-               <font>
-                  <Font name="Constantia" size="14.0" />
-               </font>
-            </Label>
             <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
          </children>
       </Pane>
-      <Pane layoutX="98.0" layoutY="288.0" prefHeight="50.0" prefWidth="111.0">
-         <children>
-            <Label fx:id="CHI21" layoutY="1.0" prefHeight="26.0" prefWidth="77.0" text="Los Angeles" textFill="#080000">
-               <font>
-                  <Font name="Constantia" size="14.0" />
-               </font>
-            </Label>
-            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
-         </children>
-      </Pane>
-      <Pane layoutX="44.0" layoutY="222.0" prefHeight="50.0" prefWidth="118.0">
-         <children>
-            <Label fx:id="CHI22" layoutX="24.0" layoutY="12.0" prefHeight="26.0" prefWidth="100.0" text="San Francisco" textFill="#080000">
-               <font>
-                  <Font name="Constantia" size="14.0" />
-               </font>
-            </Label>
-            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
-         </children>
-      </Pane>
-      <Pane layoutX="57.0" layoutY="82.0" prefHeight="50.0" prefWidth="118.0">
-         <children>
-            <Label fx:id="CHI23" layoutX="24.0" layoutY="12.0" prefHeight="26.0" prefWidth="71.0" text="Portland" textFill="#080000">
-               <font>
-                  <Font name="Constantia" size="14.0" />
-               </font>
-            </Label>
-            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
-         </children>
-      </Pane>
-      <Pane layoutX="216.0" layoutY="114.0" prefHeight="50.0" prefWidth="118.0">
-         <children>
-            <Label fx:id="CHI24" layoutX="24.0" layoutY="12.0" prefHeight="26.0" prefWidth="71.0" text="Hellena" textFill="#080000">
-               <font>
-                  <Font name="Constantia" size="14.0" />
-               </font>
-            </Label>
-            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
-         </children>
-      </Pane>
-      <Pane layoutX="175.0" layoutY="197.0" prefHeight="50.0" prefWidth="118.0">
-         <children>
-            <Label fx:id="CHI25" layoutX="24.0" layoutY="12.0" prefHeight="26.0" prefWidth="71.0" text="Salt Lake" textFill="#080000">
-               <font>
-                  <Font name="Constantia" size="14.0" />
-               </font>
-            </Label>
-            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
-         </children>
-      </Pane>
-      <Pane layoutX="150.0" layoutY="303.0" prefHeight="50.0" prefWidth="118.0">
-         <children>
-            <Label fx:id="CHI251" layoutX="24.0" layoutY="12.0" prefHeight="26.0" prefWidth="71.0" text="Phoenix" textFill="#080000">
-               <font>
-                  <Font name="Constantia" size="14.0" />
-               </font>
-            </Label>
-            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
-         </children>
-      </Pane>
-      <Pane layoutX="350.0" layoutY="278.0" prefHeight="50.0" prefWidth="118.0">
-         <children>
-            <Label fx:id="CHI252" layoutX="24.0" layoutY="3.0" prefHeight="44.0" prefWidth="71.0" text="Oklahoma City" textFill="#080000" wrapText="true">
-               <font>
-                  <Font name="Constantia" size="14.0" />
-               </font>
-            </Label>
-            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
-         </children>
-      </Pane>
+      <Label fx:id="CHI21" layoutX="98.0" layoutY="289.0" prefHeight="26.0" prefWidth="77.0" text="Los Angeles" textFill="#080000">
+         <font>
+            <Font name="Constantia" size="14.0" />
+         </font>
+      </Label>
+      <Circle fill="#ff1f1f" layoutX="112.0" layoutY="324.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="CHI22" layoutX="68.0" layoutY="234.0" prefHeight="26.0" prefWidth="100.0" text="San Francisco" textFill="#080000">
+         <font>
+            <Font name="Constantia" size="14.0" />
+         </font>
+      </Label>
+      <Circle fill="#ff1f1f" layoutX="58.0" layoutY="258.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="CHI23" layoutX="81.0" layoutY="94.0" prefHeight="26.0" prefWidth="71.0" text="Portland" textFill="#080000">
+         <font>
+            <Font name="Constantia" size="14.0" />
+         </font>
+      </Label>
+      <Circle fill="#ff1f1f" layoutX="71.0" layoutY="118.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="CHI24" layoutX="224.0" layoutY="119.0" prefHeight="26.0" prefWidth="71.0" text="Hellena" textFill="#080000">
+         <font>
+            <Font name="Constantia" size="14.0" />
+         </font>
+      </Label>
+      <Circle fill="#ff1f1f" layoutX="230.0" layoutY="150.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#ff1f1f" layoutX="189.0" layoutY="233.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="CHI251" layoutX="187.0" layoutY="316.0" prefHeight="26.0" prefWidth="71.0" text="Phoenix" textFill="#080000">
+         <font>
+            <Font name="Constantia" size="14.0" />
+         </font>
+      </Label>
+      <Circle fill="#ff1f1f" layoutX="174.0" layoutY="350.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
       <Label fx:id="CHI1" layoutX="410.0" layoutY="120.0" prefHeight="59.0" prefWidth="77.0" text="Minneapolis" textAlignment="CENTER" textFill="#080000" wrapText="true">
          <font>
             <Font name="Constantia" size="14.0" />
          </font>
       </Label>
-      <Pane layoutX="369.0" layoutY="380.0" prefHeight="50.0" prefWidth="118.0">
+      <Pane layoutX="351.0" layoutY="388.0" prefHeight="50.0" prefWidth="118.0">
          <children>
             <Label fx:id="CHI2511" layoutX="24.0" layoutY="12.0" prefHeight="26.0" prefWidth="71.0" text="Huston" textFill="#080000">
                <font>
@@ -154,6 +106,177 @@
                </font>
             </Label>
             <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </Pane>
+      <Circle fill="#ff1f1f" layoutX="309.0" layoutY="357.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+      <Pane layoutX="545.0" layoutY="235.0" prefHeight="50.0" prefWidth="101.0">
+         <children>
+            <Circle fill="#ff1f1f" layoutX="13.0" layoutY="25.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+            <Label fx:id="NYC1" layoutX="23.0" layoutY="17.0" prefHeight="26.0" prefWidth="71.0" text="Charleston" textFill="#080000">
+               <font>
+                  <Font name="Constantia" size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane fx:id="Route00" layoutX="319.0" layoutY="353.0">
+         <children>
+            <Rectangle fx:id="Route000" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="38.880126953125" layoutY="44.730499267578125" opacity="0.7" rotate="-55.8" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route001" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="17.426849365234375" layoutY="25.884613037109375" opacity="0.7" rotate="-47.6" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route002" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="-1.02996826171875" layoutY="5.635345458984375" opacity="0.7" rotate="-41.8" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+         </children>
+      </Pane>
+      <Pane fx:id="Route01" layoutX="540.0" layoutY="344.0" prefHeight="88.0" prefWidth="90.0" rotate="14.7">
+         <children>
+            <Rectangle fx:id="Route010" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="59.0" layoutY="65.0" opacity="0.7" rotate="-55.8" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route011" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="38.0" layoutY="49.0" opacity="0.7" rotate="-47.6" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route012" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="19.0" layoutY="31.0" opacity="0.7" rotate="130.0" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route013" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="-1.0" layoutY="13.0" opacity="0.7" rotate="-47.9" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+         </children>
+      </Pane>
+      <Pane layoutX="355.0" layoutY="279.0" prefHeight="50.0" prefWidth="118.0">
+         <children>
+            <Circle fill="#ff1f1f" layoutX="14.0" layoutY="36.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </Pane>
+      <Pane fx:id="Route02" layoutX="427.0" layoutY="248.0" prefHeight="152.0" prefWidth="48.0" rotate="-79.9">
+         <children>
+            <Rectangle fx:id="Route020b" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="7.0" layoutY="120.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route021b" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="7.0" layoutY="91.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route021a" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="20.0" layoutY="91.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route020a" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="20.0" layoutY="120.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route024b" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="7.0" layoutY="5.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route023b" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="7.0" layoutY="33.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route022b" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="7.0" layoutY="63.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route024a" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="20.0" layoutY="5.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route023a" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="20.0" layoutY="33.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route022a" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="20.0" layoutY="63.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+         </children>
+      </Pane>
+      <Pane fx:id="Route03" layoutX="404.0" layoutY="209.0" prefHeight="127.0" prefWidth="28.0" rotate="50.0">
+         <children>
+            <Rectangle fx:id="Route030" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="7.0" layoutY="91.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route033" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="7.0" layoutY="5.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route032" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="7.0" layoutY="33.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route031" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="7.0" layoutY="63.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+         </children>
+      </Pane>
+      <Pane fx:id="Route04" layoutX="529.0" layoutY="262.0" prefHeight="88.0" prefWidth="28.0" rotate="21.4">
+         <children>
+            <Rectangle fx:id="Route040" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="7.0" layoutY="6.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route041" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="7.0" layoutY="32.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route042" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="7.0" layoutY="58.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+         </children>
+      </Pane>
+      <Pane fx:id="Route05" layoutX="587.0" layoutY="184.0" prefHeight="101.0" prefWidth="28.0" rotate="52.4">
+         <children>
+            <Rectangle fx:id="Route050" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="3.0" layoutY="8.0" opacity="0.7" rotate="16.8" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route051" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutY="37.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route052" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="3.0" layoutY="66.0" opacity="0.7" rotate="-9.0" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+         </children>
+      </Pane>
+      <Pane fx:id="Route08" layoutX="264.0" layoutY="251.0" prefHeight="106.0" prefWidth="48.0" rotate="-27.3">
+         <children>
+            <Rectangle fx:id="Route080" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="12.0" layoutY="72.0" opacity="0.7" rotate="-7.3" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route082" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="19.0" layoutY="17.0" opacity="0.7" rotate="12.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route081" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="11.0" layoutY="45.0" opacity="0.7" rotate="8.6" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+         </children>
+      </Pane>
+      <Pane fx:id="Route07" layoutX="345.0" layoutY="148.0" prefHeight="181.0" prefWidth="48.0" rotate="-101.8">
+         <children>
+            <Rectangle fx:id="Route071" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="18.0" layoutY="125.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route070" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="18.0" layoutY="154.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route074" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="18.0" layoutY="39.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route073" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="18.0" layoutY="67.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route072" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="18.0" layoutY="97.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route075" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="18.0" layoutY="11.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+         </children>
+      </Pane>
+      <Pane fx:id="Route06" layoutX="502.0" layoutY="195.0" prefHeight="88.0" prefWidth="28.0" rotate="-65.0">
+         <children>
+            <Rectangle fx:id="Route062" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="7.0" layoutY="6.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route061" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="7.0" layoutY="32.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route060" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="7.0" layoutY="58.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+         </children>
+      </Pane>
+      <Label fx:id="CHI2" layoutX="290.0" layoutY="262.0" prefHeight="26.0" prefWidth="71.0" text="Denver" textFill="#080000">
+         <font>
+            <Font name="Constantia" size="14.0" />
+         </font>
+      </Label>
+      <Pane fx:id="Route09" layoutX="328.0" layoutY="306.0" prefHeight="63.0" prefWidth="23.0" rotate="56.9">
+         <children>
+            <Rectangle fx:id="Route090" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="5.0" layoutY="32.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route091" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="5.0" layoutY="5.0" opacity="0.7" rotate="1.1" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+         </children>
+      </Pane>
+      <Label fx:id="CHI211" layoutX="296.0" layoutY="305.0" prefHeight="24.0" prefWidth="58.0" text="Lubbock" textFill="#080000">
+         <font>
+            <Font name="Constantia" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="CHI252" layoutX="355.0" layoutY="330.0" prefHeight="44.0" prefWidth="71.0" text="Oklahoma City" textFill="#080000" wrapText="true">
+         <font>
+            <Font name="Constantia" size="14.0" />
+         </font>
+      </Label>
+      <Pane fx:id="Route10" layoutX="318.0" layoutY="134.0" prefHeight="143.0" prefWidth="33.0" rotate="57.1">
+         <children>
+            <Rectangle fx:id="Route101" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="19.0" layoutY="86.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route100" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="19.0" layoutY="115.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route104" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="19.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route103" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="19.0" layoutY="28.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route102" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="19.0" layoutY="58.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+         </children>
+      </Pane>
+      <Pane fx:id="Route11" layoutX="266.0" layoutY="103.0" prefHeight="188.0" prefWidth="48.0" rotate="70.1">
+         <children>
+            <Rectangle fx:id="Route111" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="18.0" layoutY="130.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route110" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="18.0" layoutY="160.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route114" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="18.0" layoutY="33.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route113" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="18.0" layoutY="65.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route112" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="18.0" layoutY="97.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route115" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="18.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+         </children>
+      </Pane>
+      <Label fx:id="CHI25" layoutX="173.0" layoutY="238.0" prefHeight="26.0" prefWidth="71.0" text="Salt Lake" textFill="#080000">
+         <font>
+            <Font name="Constantia" size="14.0" />
+         </font>
+      </Label>
+      <Pane fx:id="Route12" layoutX="293.0" layoutY="71.0" prefHeight="143.0" prefWidth="33.0" rotate="90.3">
+         <children>
+            <Rectangle fx:id="Route121" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="19.0" layoutY="86.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route120" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="19.0" layoutY="115.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route124" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="19.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route123" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="19.0" layoutY="28.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route122" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="19.0" layoutY="58.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+         </children>
+      </Pane>
+      <Pane fx:id="Route13" layoutX="195.0" layoutY="149.0" prefHeight="88.0" prefWidth="28.0" rotate="29.6">
+         <children>
+            <Rectangle fx:id="Route130" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="7.0" layoutY="6.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route131" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="7.0" layoutY="32.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route132" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="7.0" layoutY="58.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+         </children>
+      </Pane>
+      <Pane fx:id="Route14" layoutX="133.0" layoutY="72.0" prefHeight="143.0" prefWidth="33.0" rotate="-77.6">
+         <children>
+            <Rectangle fx:id="Route143" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="19.0" layoutY="86.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route144" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="19.0" layoutY="115.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route140" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="19.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route141" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="19.0" layoutY="28.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route142" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="19.0" layoutY="58.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+         </children>
+      </Pane>
+      <Pane fx:id="Route15" layoutX="234.0" layoutY="289.0" prefHeight="182.0" prefWidth="50.0" rotate="-70.2">
+         <children>
+            <Rectangle fx:id="Route154" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="18.0" layoutY="125.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route155" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="18.0" layoutY="154.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route151" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="18.0" layoutY="39.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route152" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="18.0" layoutY="67.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route153" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="18.0" layoutY="97.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route150" arcHeight="5.0" arcWidth="5.0" fill="#1f49ff" height="25.0" layoutX="18.0" layoutY="11.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
          </children>
       </Pane>
    </children>
