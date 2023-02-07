@@ -14,32 +14,22 @@ import javax.swing.text.html.ImageView;
 
 public class Controller {
 
-    @FXML
-    private Rectangle Hus2Lub;
-
-    @FXML
-    private Rectangle Hus2Lub1;
-
-    @FXML
-    private Rectangle Hus2Lub2;
-
-    @FXML
-    private Pane Hus2LubP;
-
-    public void example()
-    {
-        Hus2LubP.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                Hus2Lub.setFill(Color.RED);
-                Hus2Lub1.setFill(Color.RED);
-                Hus2Lub2.setFill(Color.RED);
-            }
-        });
 
 
-
-
-    }
+//    public void example()
+//    {
+//        Hus2LubP.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent mouseEvent) {
+//                Hus2Lub.setFill(Color.RED);
+//                Hus2Lub1.setFill(Color.RED);
+//                Hus2Lub2.setFill(Color.RED);
+//            }
+//        });
+//
+//
+//
+//
+//    }
 
 }
