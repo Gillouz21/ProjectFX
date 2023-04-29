@@ -57,6 +57,10 @@ public class Player {
         this.cards[card]++;
     }
 
+    public void removeCard(int card){
+        this.cards[card]--;
+    }
+
     public int getNumOfWagons() {
         return numOfWagons;
     }

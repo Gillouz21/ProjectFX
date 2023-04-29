@@ -170,12 +170,12 @@
       </Pane>
       <Pane fx:id="Route07" layoutX="345.0" layoutY="148.0" prefHeight="181.0" prefWidth="48.0" rotate="-101.8">
          <children>
-            <Rectangle fx:id="Route071" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="25.0" layoutX="18.0" layoutY="125.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
-            <Rectangle fx:id="Route070" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="25.0" layoutX="18.0" layoutY="154.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
-            <Rectangle fx:id="Route074" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="25.0" layoutX="18.0" layoutY="39.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
-            <Rectangle fx:id="Route073" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="25.0" layoutX="18.0" layoutY="67.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
-            <Rectangle fx:id="Route072" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="25.0" layoutX="18.0" layoutY="97.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
-            <Rectangle fx:id="Route075" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="25.0" layoutX="18.0" layoutY="11.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route071" arcHeight="5.0" arcWidth="5.0" fill="GREEN" height="25.0" layoutX="18.0" layoutY="125.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route070" arcHeight="5.0" arcWidth="5.0" fill="GREEN" height="25.0" layoutX="18.0" layoutY="154.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route074" arcHeight="5.0" arcWidth="5.0" fill="GREEN" height="25.0" layoutX="18.0" layoutY="39.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route073" arcHeight="5.0" arcWidth="5.0" fill="GREEN" height="25.0" layoutX="18.0" layoutY="67.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route072" arcHeight="5.0" arcWidth="5.0" fill="GREEN" height="25.0" layoutX="18.0" layoutY="97.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route075" arcHeight="5.0" arcWidth="5.0" fill="GREEN" height="25.0" layoutX="18.0" layoutY="11.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
          </children>
       </Pane>
       <Pane fx:id="Route06" layoutX="502.0" layoutY="195.0" prefHeight="88.0" prefWidth="28.0" rotate="-65.0">
@@ -192,8 +192,8 @@
       </Label>
       <Pane fx:id="Route09" layoutX="328.0" layoutY="306.0" prefHeight="63.0" prefWidth="23.0" rotate="56.9">
          <children>
-            <Rectangle fx:id="Route090" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="25.0" layoutX="5.0" layoutY="32.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
-            <Rectangle fx:id="Route091" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="25.0" layoutX="5.0" layoutY="5.0" opacity="0.7" rotate="1.1" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route090" arcHeight="5.0" arcWidth="5.0" fill="GREEN" height="25.0" layoutX="5.0" layoutY="32.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route091" arcHeight="5.0" arcWidth="5.0" fill="GREEN" height="25.0" layoutX="5.0" layoutY="5.0" opacity="0.7" rotate="1.1" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
          </children>
       </Pane>
       <Label fx:id="CHI211" layoutX="248.0" layoutY="352.0" prefHeight="24.0" prefWidth="58.0" text="Lubbock" textFill="#080000">
@@ -301,10 +301,10 @@
       </Pane>
       <Pane fx:id="Route21" layoutX="116.0" layoutY="185.0" prefHeight="118.0" prefWidth="15.0" rotate="79.6">
          <children>
-            <Rectangle fx:id="Route213" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="25.0" layoutX="2.0" layoutY="90.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
-            <Rectangle fx:id="Route210" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="25.0" layoutX="2.0" layoutY="4.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
-            <Rectangle fx:id="Route211" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="25.0" layoutX="2.0" layoutY="32.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
-            <Rectangle fx:id="Route212" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="25.0" layoutX="2.0" layoutY="62.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route213" arcHeight="5.0" arcWidth="5.0" fill="GREEN" height="25.0" layoutX="2.0" layoutY="90.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route210" arcHeight="5.0" arcWidth="5.0" fill="GREEN" height="25.0" layoutX="2.0" layoutY="4.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route211" arcHeight="5.0" arcWidth="5.0" fill="GREEN" height="25.0" layoutX="2.0" layoutY="32.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route212" arcHeight="5.0" arcWidth="5.0" fill="GREEN" height="25.0" layoutX="2.0" layoutY="62.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
          </children>
       </Pane>
       <Pane fx:id="Route22" layoutX="56.0" layoutY="126.0" prefHeight="118.0" prefWidth="15.0" rotate="4.7">
@@ -323,12 +323,12 @@
       </Pane>
       <Pane fx:id="Route24" layoutX="437.0" layoutY="305.0" prefHeight="182.0" prefWidth="18.0" rotate="63.8">
          <children>
-            <Rectangle fx:id="Route244" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="25.0" layoutX="3.0" layoutY="124.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
-            <Rectangle fx:id="Route245" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="25.0" layoutX="3.0" layoutY="153.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
-            <Rectangle fx:id="Route241" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="25.0" layoutX="3.0" layoutY="38.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
-            <Rectangle fx:id="Route242" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="25.0" layoutX="3.0" layoutY="66.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
-            <Rectangle fx:id="Route243" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="25.0" layoutX="3.0" layoutY="96.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
-            <Rectangle fx:id="Route240" arcHeight="5.0" arcWidth="5.0" fill="LIME" height="25.0" layoutX="3.0" layoutY="10.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route244" arcHeight="5.0" arcWidth="5.0" fill="GREEN" height="25.0" layoutX="3.0" layoutY="124.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route245" arcHeight="5.0" arcWidth="5.0" fill="GREEN" height="25.0" layoutX="3.0" layoutY="153.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route241" arcHeight="5.0" arcWidth="5.0" fill="GREEN" height="25.0" layoutX="3.0" layoutY="38.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route242" arcHeight="5.0" arcWidth="5.0" fill="GREEN" height="25.0" layoutX="3.0" layoutY="66.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route243" arcHeight="5.0" arcWidth="5.0" fill="GREEN" height="25.0" layoutX="3.0" layoutY="96.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
+            <Rectangle fx:id="Route240" arcHeight="5.0" arcWidth="5.0" fill="GREEN" height="25.0" layoutX="3.0" layoutY="10.0" opacity="0.7" stroke="#0000008d" strokeType="INSIDE" width="10.0" />
          </children>
       </Pane>
       <Circle fill="#ff1f1f" layoutX="344.0" layoutY="436.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
@@ -460,6 +460,27 @@
          <children>
             <ImageView fitHeight="77.0" fitWidth="116.0" pickOnBounds="true" preserveRatio="true" />
             <Label layoutX="45.0" layoutY="81.0" text="Label" />
+         </children>
+      </Pane>
+      <Pane fx:id="RouteCardEnd" layoutX="1038.0" layoutY="667.0" visible="false">
+         <children>
+            <Label prefHeight="36.0" prefWidth="70.0" text="Done">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane fx:id="PlayersPoints" layoutX="24.0" layoutY="14.0">
+         <children>
+            <Label text="Player 1:" visible="false" />
+            <Label layoutX="52.0" text="Label" visible="false" />
+            <Label layoutX="115.0" text="Player 2:" visible="false" />
+            <Label layoutX="162.0" text="Label" visible="false" />
+            <Label layoutX="223.0" text="Player 3:" visible="false" />
+            <Label layoutX="272.0" text="Label" visible="false" />
+            <Label layoutX="330.0" text="Player 4:" visible="false" />
+            <Label layoutX="380.0" text="Label" visible="false" />
          </children>
       </Pane>
    </children>

@@ -2,7 +2,8 @@ package sample;
 
 import javafx.scene.layout.Pane;
 
-import java.util.ArrayList;
+import javax.management.ObjectName;
+import java.util.*;
 
 public class Presenter implements IPresenter {
     private IView iview;
@@ -24,18 +25,19 @@ public class Presenter implements IPresenter {
 
     //FIRST OPTION OF USER TURN
     public void pathClicked(int index){
-        int player = model.getPlayer().getPlayerID();
-        model.occupyRoute(player,index); //occupies the route and add points to the player
-        if (model.isWin(player))
-        {
+
+        model.occupyPath(0, index); //occupies the path and add points to the player
+        iview.changeColor(index, model.getPlayerColor(0));
+
+        for (Route route: model.getPlayer().getRouteList()) {
+            if (!route.isComplete() && model.isRouteCompleted(route)){
+                route.setComplete(true);
+                model.getPlayer().incPoints(route.getPoints());
+            }
+        }
+        if (model.isWin(0)) {
             //end game}
         }
-        else{
-            iview.changeColor(index, model.getPlayerColor(player));
-        }
-
-        model.nextPlayer();
-
 
     }
 
@@ -55,7 +57,6 @@ public class Presenter implements IPresenter {
     @Override
     public void insertRouteToPlayerRouteList(Route r) {
         model.insertRouteToPlayer(r);
-        model.nextPlayer();
     }
 
     @Override
@@ -70,8 +71,28 @@ public class Presenter implements IPresenter {
 
     @Override
     public void addWagonCard(int index) {
-        model.getPlayer().AddCard(index); //NEEDS to be changed so that will ony show first players card.
+        model.getPLAYER_ARR()[0].AddCard(index);
     }
+
+    @Override
+    public void botMove() {
+        ArrayList<Route> routes = model.getPLAYER_ARR()[0].getRouteList();
+        Map<List<List<Integer>>, Integer> bestRoutes =  model.pickRoutes(routes);
+
+
+        model.nextPlayer();
+
+    }
+
+
+
+
+    @Override
+    public void useWagonCard(int index) {
+        model.getPlayer().removeCard(index);
+        model.usedWagonStack.push(index);
+    }
+
 
 
 }

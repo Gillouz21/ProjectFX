@@ -49,21 +49,20 @@ public class Connection {
     }
 
     //one road
-    public void placeRoute(int playerID, Color color){
+    public void placePath(int playerID, Color color){
         this.playerID[0] = playerID;
         this.color[0] = color;
         this.complete = true;
     }
 
     //two roads
-    public void placeRoute(int playerID, Color color, int r ) { //r = 0: road a, 1: road b //ASK ALON if needed
+    public void placePath(int playerID, Color color, int r ) { //r = 0: road a, 1: road b //ASK ALON if needed
         if (r == 0){
             this.playerID[0] = playerID;
             this.color[0] = color;
             if (this.playerID[1] != -1)
                 this.complete = true;
         }
-
         else{
             this.playerID[1] = playerID;
             this.color[1] = color;
@@ -73,18 +72,7 @@ public class Connection {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
+
+
 }
