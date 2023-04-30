@@ -53,6 +53,7 @@ public class Model {
 
         //initializing the wagonsToPoints that maps the number of wagons in the path that has been placed to its value in points
         initWagonsToPoints();
+
         //initializing doubledPaths that maps which path fits the right index in the Connection
         initDoubledPaths();
     }
