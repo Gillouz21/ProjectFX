@@ -26,6 +26,7 @@ public class Main extends Application implements IView {
     private int[] optionalWagonCards = new int[5];
     private ArrayList<Pane> playersWagonCardPanes = new ArrayList<>();
     private Pane pointsPane;
+    private Pane BotsMovePane;
     private ArrayList<Pane> generalPanes = new ArrayList<>();
     private static String ID_PREFIX = "#Route";
     boolean isDeckClicked = false;
@@ -116,6 +117,11 @@ public class Main extends Application implements IView {
         generalPanes.add(p);
         p = (Pane) s.lookup("#RouteDeck");
         generalPanes.add(p);
+
+        BotsMovePane = (Pane) s.lookup("#BotsMove");
+        Label templ = (Label)  BotsMovePane.getChildren().get(0);
+        templ.setText("Your Turn!");
+
         pointsPane = (Pane) s.lookup("#PlayersPoints");
 
         for (int i = 0; i < presenter.getModel().NUM_OF_PLAYERS; i++) {
@@ -180,9 +186,9 @@ public class Main extends Application implements IView {
                     {
                         int index = Integer.valueOf(pane.getId().split("e")[1]);
 
-                        if (presenter.getModel().canOccupyPath(index)) 
+                        if (presenter.getModel().canOccupyPath(index))
                             pathIndex = index;
-                        
+
                     }
                     else if (pane.getId().matches("RouteDeck") && !isDeckClicked && !firstChoice && pathIndex == -1 && presenter.getModel().routeQueue.size() > 0)
                     {
@@ -361,6 +367,11 @@ public class Main extends Application implements IView {
         Label l = (Label) pointsPane.getChildren().get(pID * 2 + 1);
         l.setText(Integer.toString(points));
 
+    }
+
+    public void updateBotsMove(String s){
+        Label l = (Label) BotsMovePane.getChildren().get(0);
+        l.setText(s);
     }
 
 }

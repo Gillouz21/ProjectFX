@@ -25,6 +25,7 @@ public class Model {
     Map< Integer, Integer> doubledPaths = new HashMap<>();
     Map<Color, Integer> colorsAndNumbers = new HashMap<Color, Integer>(); //{WHITE, BLUE, YELLOW, PURPLE, ORANGE, BLACK, RED, GREEN, JOKER}
     Color[] playersColors = {Color.BLUE, Color.WHITE, Color.GREEN, Color.ORANGE};
+    List<Integer> botsCityList= new ArrayList<>();
 
 
     public Model() {
@@ -207,6 +208,7 @@ public class Model {
 
             board[array[1]][array[0]] = board[array[0]][array[1]]; //for symmetrical purposes
             i++;
+
         }
 
     }
@@ -548,5 +550,68 @@ public class Model {
     public float calculateScore(int cardsCompleted, int cardsValue, int pathWeight, int pathConnections) {
         return ((float) cardsCompleted * cardsValue) / ((float) pathConnections * pathWeight);
 
+    }
+
+    public Integer getIndexByIandJ(int i, int j) {
+        for (Map.Entry<Integer, Integer[]> entry : routeMap.entrySet()) {
+            Integer[] value = entry.getValue();
+            if ((value[0].equals(i) && value[1].equals(j))
+                    || (value[0].equals(j) && value[1].equals(i))) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    public List<Integer> pickWagonCards(List<List<Integer>> chosenPath) {
+
+        int score;
+        int maxScore = -1;
+        List<Integer> chosenConnection = null;
+        for (List<Integer> connection : chosenPath
+        ) {
+            int i = connection.get(0);
+            int j = connection.get(1);
+            score = 0;
+            Connection c = board[i][j];
+            if(c.getWeight() == 2)
+                score += 50;
+            else if(c.getWeight() == 3)
+                score += 30;
+            else if (c.getWeight() == 4)
+                score += 20;
+
+            //close to other bots connections
+            if(isNearOtherConnections(connection, currentPlayer))
+                score += 60;
+
+            //close to opponents
+            if(isNearOtherConnections(connection, 0))
+                score += 30;
+
+            if(botsCityList.contains(i) && botsCityList.contains(j))
+                score += 50;
+            else if(botsCityList.contains(i) || botsCityList.contains(j))
+                score += 20;
+
+            if(score > maxScore) {
+                maxScore = score;
+                chosenConnection = connection;
+            }
+        }
+        return chosenConnection;
+    }
+
+
+    private boolean isNearOtherConnections(List<Integer> connection, int playerID) {
+        int i = connection.get(0);
+        int j = connection.get(1);
+
+        for (int k = 0; k < NUM_OF_CITIES; k++) {
+            if ((k != j && isConnectionExists(i,k,playerID)) || (k != i && isConnectionExists(j,k,playerID))){
+                return true;
+            }
+        }
+        return false;
     }
 }

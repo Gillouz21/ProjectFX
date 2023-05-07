@@ -75,31 +75,101 @@ public class Presenter implements IPresenter {
 
     @Override
     public void botMove() {
-
+        String moveMade = "";
         if (model.getPlayer().getRouteList().isEmpty()) // if the bot doesn't have destination cards
         {
             // pick destination cards
+            ArrayList<Route> optionalRoutes = model.getRouteCards();
+            List<List<Integer>> chosenPath = bestPath(optionalRoutes);
+
+            List<Integer> cityList = pathToListOfVertices(chosenPath);
+
+            //iterate over the possible destination cards and insert them if the bot has picked them
+            Iterator<Route> iter = optionalRoutes.iterator();
+            while (iter.hasNext()) {
+                Route r = iter.next();
+                if (cityList.contains(r.getCities()[0]) && cityList.contains(r.getCities()[1])) {
+                    insertRouteToPlayerRouteList(r);
+                    iter.remove();
+                }
+            }
+
+            insertRouteQueue(optionalRoutes);   //insert the rest of the destination cards back to the stack
+            moveMade = "The Bot has picked Destination Cards";
         }
         else {
             //pick best Route
-            List<List<Integer>> chosenPath ;
+            List<List<Integer>> chosenPath = bestPath(model.getPlayer().getRouteList()); //just for debugging im using the users cards
+
+            //check if the bot has enough cards to claim the connection
+            List<List<Integer>> possibleConnections = getOccupyableConnections(chosenPath);
+
+            if (possibleConnections == null){
+                List<Integer> bestConnection = model.pickWagonCards(chosenPath);
+
+
+            }
+            else{
+                List<Integer> bestConnection = model.pickWagonCards(possibleConnections);
+                int i = bestConnection.get(0);
+                int j = bestConnection.get(1);
+                int weight = model.getPathWeight(model.getIndexByIandJ(i,j));
+                int connectionColorCode = model.getPathColorCode(model.getIndexByIandJ(i,j));
+                while (weight > 0 ){
+                    if (model.getPlayer().getCards()[connectionColorCode] > 0) //cards of the same color
+                        model.getPlayer().getCards()[connectionColorCode]--;
+                    else
+                        model.getPlayer().getCards()[8]--;  // joker cards
+                    weight--;
+                }
+                model.occupyPath(model.getPlayer().getPlayerID(),model.getIndexByIandJ(i, j));
+                iview.changeColor(model.getIndexByIandJ(i, j), model.getPlayerColor(model.getPlayer().getPlayerID()));
+                moveMade = "The Bot has claimed a path";
+            }
 
         }
+        iview.updateBotsMove(moveMade);
+        model.nextPlayer();
 
+    }
 
+    private List<List<Integer>> getOccupyableConnections(List<List<Integer>> chosenPath) {
+        List<List<Integer>> possibleConnections = new ArrayList<>();
+        for (List<Integer> connection:
+                chosenPath
+             ) {
+            int i = connection.get(0);
+            int j = connection.get(1);
+            int index = model.getIndexByIandJ(i,j);
+            if (model.canOccupyPath(index)){
+                possibleConnections.add(connection);
+            }
+        }
+        return possibleConnections;
+    }
 
+    private List<Integer> pathToListOfVertices(List<List<Integer>> chosenPath) {
+        List<Integer> vertices = new ArrayList<>();
+        for (List<Integer> connection: chosenPath
+             ) {
+            if (!vertices.contains(connection.get(0)))
+                vertices.add(connection.get(0));
 
+            if (!vertices.contains(connection.get(1)))
+                vertices.add(connection.get(1));
+        }
+        return vertices;
+    }
 
-        List<List<Route>> routesSet = getAllRouteCombinations(model.getPLAYER_ARR()[0].getRouteList());
-        //List<Integer> numOfRoutesCompleted = getNumOfRoutesCompletable(routesSet);
-        //int numOfCombinations = routesSet.size();
+    private List<List<Integer>> bestPath(ArrayList<Route> routeList) {
+        List<List<Route>> routesSet = getAllRouteCombinations(routeList);
         Map<List<Route>, Map<List<List<Integer>>, Integer>> routeCombos2Paths = new HashMap<>();
         Map<List<List<Integer>>, Float> pathsScores = new HashMap<>();
         List<List<Integer>> chosenPath;
 
         //get every path for every combo
         for (List<Route> set: routesSet
-             ) {
+        ) {
             routeCombos2Paths.put(set, model.pickRoutes((ArrayList<Route>) set, model.getPlayer().getNumOfWagons()));
             if (routeCombos2Paths.get(set).size() == 0)
                 routeCombos2Paths.remove(set);
@@ -115,7 +185,7 @@ public class Presenter implements IPresenter {
 
             //for every path calculate its score
             for (List<List<Integer>> path: paths.keySet()
-                 ) {
+            ) {
                 pathWeight = paths.get(path);
                 pathConnections = path.size();
 
@@ -123,13 +193,7 @@ public class Presenter implements IPresenter {
             }
         }
 
-        chosenPath= Collections.max(pathsScores.entrySet(),Map.Entry.comparingByValue()).getKey(); // pick the path with the max score
-
-
-
-
-        model.nextPlayer();
-
+        return Collections.max(pathsScores.entrySet(),Map.Entry.comparingByValue()).getKey(); // pick the path with the max score
     }
 
     private int getRoutesValue(List<Route> set) {

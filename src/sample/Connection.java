@@ -56,7 +56,7 @@ public class Connection {
     }
 
     //two roads
-    public void placePath(int playerID, Color color, int r ) { //r = 0: road a, 1: road b //ASK ALON if needed
+    public void placePath(int playerID, Color color, int r ) { //r = 0: road a, 1: road b
         if (r == 0){
             this.playerID[0] = playerID;
             this.color[0] = color;
