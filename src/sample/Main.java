@@ -14,8 +14,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -120,14 +118,12 @@ public class Main extends Application implements IView {
         generalPanes.add(p);
         pointsPane = (Pane) s.lookup("#PlayersPoints");
 
-
         for (int i = 0; i < presenter.getModel().NUM_OF_PLAYERS; i++) {
             Label l = (Label)  pointsPane.getChildren().get(i * 2);
             Label points = (Label)  pointsPane.getChildren().get(i * 2 + 1);
             l.setVisible(true);
             points.setVisible(true);
             points.setText("0");
-
         }
 
         for (int i = 0; i < 3; i++) {
@@ -154,10 +150,6 @@ public class Main extends Application implements IView {
             Label l = (Label)  p.getChildren().get(1);
             l.setText("0");
         }
-
-
-
-
     }
 
     public void changeColor(int index, Color color){
@@ -291,24 +283,11 @@ public class Main extends Application implements IView {
                             presenter.getModel().nextPlayer();
                             presenter.botMove();
                         }
-
-
-
-
-
-
-
-
-
-
-
-
                     }
 
                 }
             });
         }
-
     }
 
     private void updatePossibleWagon(int pI, int key) {

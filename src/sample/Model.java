@@ -127,7 +127,6 @@ public class Model {
          colorsAndNumbers.put(Color.GREEN, 7);
     }
 
-
     public void initRouteMap(){
         //routeIndex --> i,j of connection routeMap
 
@@ -218,9 +217,7 @@ public class Model {
 
     public Color getPlayerColor(int player){
         return playersColors[player];
-
     }
-
 
     public boolean isWin(int player) {
         return (this.PLAYER_ARR[player].getPoints() >= 100);
@@ -252,7 +249,6 @@ public class Model {
                 routeQueue.add(r);
         }
     }
-
 
     public void insertRouteToPlayer(Route r) {
         Player currentPlayer = getPlayer();
@@ -293,6 +289,7 @@ public class Model {
             board[i][j].placePath(player, playersColors[player] );
 
         PLAYER_ARR[player].incPoints(wagonsToPoints.get(board[i][j].getWeight()));
+        PLAYER_ARR[player].decreaseNumOfWagons(board[i][j].getWeight());
     }
 
     public boolean isRouteCompleted(Route route){ //DFS
@@ -339,7 +336,6 @@ public class Model {
         return board[i][j].getWeight();
     }
 
-
     public void insertUsedToWagonStack() {
         Collections.shuffle(usedWagonStack);
         while(!usedWagonStack.isEmpty()){
@@ -357,7 +353,7 @@ public class Model {
         return false;
     }
 
-    public boolean isTaken(int i, int j, int playerID){
+    public boolean isTaken(int i, int j, int playerID) {
         if(board[i][j] != null && board[i][j].isComplete()){
             if(board[i][j].getNumOfRoads() == 2)
                 return board[i][j].getPlayerID()[0] != playerID && board[i][j].getPlayerID()[1] != playerID;
@@ -367,99 +363,8 @@ public class Model {
         return false;
     }
 
-//    public List<List<Integer>> getAllShortestPath(List<List<Integer>> nodes, int playerID, List<List<Integer>> explored ) {
-//        List<Integer> currSD = nodes.get(0);
-//        int source = currSD.get(0), dest = currSD.get(1);
-//
-//        int n = NUM_OF_CITIES;
-//        int[] dist = new int[n];
-//        boolean[] visited = new boolean[n];
-//        List<List<Integer>> paths = new ArrayList<>();
-//        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt((int[] a) -> a[1]));
-//        for (int i = 0; i < n; i++) {
-//            dist[i] = Integer.MAX_VALUE;
-//        }
-//        dist[source] = 0;
-//        pq.offer(new int[]{source, 0});
-//        while (!pq.isEmpty()) {
-//            int[] curr = pq.poll();
-//            int u = curr[0];
-//            if (u == dest) {
-//                // Reached destination, build all paths
-//                List<Integer> path = new ArrayList<>();
-//                List<List<Integer>> newExplored = new ArrayList<>();
-//
-//                buildPaths(paths, path, source, dest, dist, playerID,explored, newExplored);
-//                explored.addAll(newExplored);
-//
-//                if(nodes.size() -1 != 0){
-//                    List<List<Integer>> temp = getAllShortestPath(nodes.subList(1, nodes.size() ), playerID, explored);
-//                    paths.addAll(temp);
-//                }
-//                return paths;
-//            }
-//            if (visited[u]) {
-//                continue;
-//            }
-//            visited[u] = true;
-//
-//            for (int v = 0; v < n; v++) {
-//                if (board[u][v] != null) {
-//                    int alt = dist[u] + board[u][v].getWeight();
-//
-//                    // Check if a connection already exists between u and v
-//                    if (isConnectionExists(u, v, playerID) || explored.contains(List.of(u, v))) {
-//                        alt = dist[u] + 0;
-//                    }
-//
-//                    if (alt < dist[v]) {
-//                        dist[v] = alt;
-//                        pq.offer(new int[]{v, alt});
-//                    }
-//                }
-//            }
-//        }
-//        return paths; // No paths found
-//    }
-//
-//    public void buildPaths(List<List<Integer>> paths, List<Integer> path, int u, int dest, int[] dist, int playerID, List<List<Integer>> explored, List<List<Integer>> newExplored ) {
-//        path.add(u);
-//        if (u == dest) {
-//            paths.add(new ArrayList<>(path));
-//            for (int i = 0; i < path.size() - 1; i++) {
-//                List<Integer> pair = List.of(path.get(i), path.get(i + 1));
-//                if(!explored.contains(pair))
-//                    newExplored.add(pair);
-//            }
-//        } else {
-//            for (int v = 0; v < NUM_OF_CITIES; v++) {
-//                if (board[u][v] != null ) {
-//                    int x = dist[u] + board[u][v].getWeight();
-//
-//                    // Check if a connection already exists between u and v
-//                    if( isConnectionExists( u,  v, playerID)|| explored.contains(List.of(u, v))) {
-//                        x = dist[u] + 0;
-//                    }
-//
-//                    if(dist[v] == x)
-//                        buildPaths( paths, path, v, dest, dist, playerID, explored, newExplored);
-//                }
-//            }
-//        }
-//        path.remove(path.size() - 1);
-//    }
-
-
-
-
-
-
-
-
-
-
-
-    public List<List<List<Integer>>> getAllShortestPath(int source, int dest, int playerID, List<List<Integer>> explored) {
+    public List<List<List<Integer>>> getAllShortestPaths(int source, int dest, int playerID, List<List<Integer>> explored)
+    {
             int n = NUM_OF_CITIES;
             int[] dist = new int[n];
             boolean[] visited = new boolean[n];
@@ -507,37 +412,36 @@ public class Model {
                 }
             }
             return paths; // No paths found
-        }
+    }
 
-        public void buildPaths( List<List<List<Integer>>> paths, List<Integer> path, int u, int dest, int[] dist, int playerID, List<List<Integer>> explored) {
-            path.add(u);
-            if (u == dest) {
-                List<List<Integer>> edgesPath = verticesToEdges(path);
-                paths.add(new ArrayList<>(edgesPath));
-            } else {
-                for (int v = 0; v < NUM_OF_CITIES; v++) {
-                    if (board[u][v] != null) {
-                        int x = dist[u] + board[u][v].getWeight();
-
-
-                        if(isTaken(u,v,playerID)) {
-                            x = Integer.MAX_VALUE;
-                        }
+    public void buildPaths( List<List<List<Integer>>> paths, List<Integer> path, int u, int dest, int[] dist, int playerID, List<List<Integer>> explored) {
+        path.add(u);
+        if (u == dest) {
+            List<List<Integer>> edgesPath = verticesToEdges(path);
+            paths.add(new ArrayList<>(edgesPath));
+        } else {
+            for (int v = 0; v < NUM_OF_CITIES; v++) {
+                if (board[u][v] != null) {
+                    int x = dist[u] + board[u][v].getWeight();
 
 
-                        // Check if a connection already exists between u and v
-                        if( isConnectionExists( u,  v, playerID) || (explored!= null && explored.contains(List.of(u, v)))) {
-                            x = dist[u] + 0;
-                        }
-
-                        if(dist[v] == x)
-                            buildPaths( paths, path, v, dest, dist, playerID, explored);
+                    if(isTaken(u,v,playerID)) {
+                        x = Integer.MAX_VALUE;
                     }
+
+
+                    // Check if a connection already exists between u and v
+                    if( isConnectionExists( u,  v, playerID) || (explored!= null && explored.contains(List.of(u, v)))) {
+                        x = dist[u] + 0;
+                    }
+
+                    if(dist[v] == x)
+                        buildPaths( paths, path, v, dest, dist, playerID, explored);
                 }
             }
-            path.remove(path.size() - 1);
         }
-
+        path.remove(path.size() - 1);
+    }
 
     public List<List<Integer>> verticesToEdges(List<Integer> path) {
         List<List<Integer>> explored = new ArrayList<>();
@@ -546,7 +450,6 @@ public class Model {
         }
         return explored;
     }
-
 
     boolean mergeable(List<List<Integer>> list1 , List<List<Integer>> list2) {
         for (List<Integer> sublist1 : list1) {
@@ -570,9 +473,7 @@ public class Model {
         return mergedPath;
     }
 
-
-
-    public Map<List<List<Integer>>, Integer> pickRoutes(ArrayList<Route> routes){
+    public Map<List<List<Integer>>, Integer> pickRoutes(ArrayList<Route> routes, int numOfWagons){
         Queue<List<Integer>> routeCards = new LinkedList<>();
         for (Route route: routes
         ) {
@@ -586,14 +487,14 @@ public class Model {
         List<List<List<Integer>>> nextPaths;
 
         List<Integer> pair = routeCards.remove();
-        paths = getAllShortestPath(pair.get(0) ,pair.get(1), getPlayer().getPlayerID(), null);
+        paths = getAllShortestPaths(pair.get(0) ,pair.get(1), getPlayer().getPlayerID(), null);
 
         while (!routeCards.isEmpty()){
             pair = routeCards.remove();
             int tempSize = paths.size();
             for (int i = 0; i < tempSize; i++) {
                 List<List<Integer>> path = paths.get(i);
-                nextPaths = getAllShortestPath(pair.get(0) ,pair.get(1), getPlayer().getPlayerID(), path);
+                nextPaths = getAllShortestPaths(pair.get(0) ,pair.get(1), getPlayer().getPlayerID(), path);
 
                 for (List<List<Integer>> nextPath: nextPaths
                 ) {
@@ -605,27 +506,35 @@ public class Model {
             paths = paths.subList(tempSize, paths.size());
         }
 
+        Map<List<List<Integer>>, Integer> weightedPaths = calculatePathsCost(paths, numOfWagons);
+
+        return weightedPaths;
+    }
+
+    public Map<List<List<Integer>>, Integer> calculatePathsCost(List<List<List<Integer>>> paths, int numOfWagons) {
         int minWeight = Integer.MAX_VALUE;
-        Map<List<List<Integer>>, Integer> weightedPaths = new HashMap();
+        Map<List<List<Integer>>, Integer> weightedPaths = new HashMap<>();
         for (List<List<Integer>> path : paths
         ) {
             int weight = getRouteWeight(path);
-            weightedPaths.put(path, weight);
-            if (weight < minWeight){
-                minWeight = weight;
+            if (weight <= numOfWagons) // only possible if there are enough train cars
+            {
+                weightedPaths.put(path, weight);
+                if (weight < minWeight)
+                    minWeight = weight;
             }
         }
 
         for (Map.Entry<List<List<Integer>>, Integer> entry : weightedPaths.entrySet()
         ) {
-            if (entry.getValue() != minWeight){
+            if (entry.getValue() != minWeight ){
                 weightedPaths.remove(entry);
             }
         }
 
         return weightedPaths;
-
     }
+
 
     private int getRouteWeight(List<List<Integer>> path) {
         int sum = 0;
@@ -636,8 +545,8 @@ public class Model {
         return sum;
     }
 
+    public float calculateScore(int cardsCompleted, int cardsValue, int pathWeight, int pathConnections) {
+        return ((float) cardsCompleted * cardsValue) / ((float) pathConnections * pathWeight);
+
+    }
 }
-
-
-
-
