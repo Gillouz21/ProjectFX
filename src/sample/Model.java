@@ -563,7 +563,7 @@ public class Model {
         return null;
     }
 
-    public List<Integer> pickWagonCards(List<List<Integer>> chosenPath) {
+    public List<Integer> pickBestConnection(List<List<Integer>> chosenPath) {
 
         int score;
         int maxScore = -1;
@@ -614,4 +614,6 @@ public class Model {
         }
         return false;
     }
+
+
 }

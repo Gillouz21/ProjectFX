@@ -70,7 +70,7 @@ public class Presenter implements IPresenter {
 
     @Override
     public void addWagonCard(int index) {
-        model.getPLAYER_ARR()[0].AddCard(index);
+        model.getPlayer().AddCard(index);
     }
 
     @Override
@@ -105,12 +105,17 @@ public class Presenter implements IPresenter {
             List<List<Integer>> possibleConnections = getOccupyableConnections(chosenPath);
 
             if (possibleConnections == null){
-                List<Integer> bestConnection = model.pickWagonCards(chosenPath);
+                List<Integer> bestConnection = model.pickBestConnection(chosenPath);
+                int i = bestConnection.get(0);
+                int j = bestConnection.get(1);
+                int connectionColorCode = model.getPathColorCode(model.getIndexByIandJ(i,j));
 
+                int[] optionalOpenCards = iview.getOptionalWagonCards();
+                pickCards(connectionColorCode, optionalOpenCards);       // can be improved by considering multiple connections of different colors
 
             }
             else{
-                List<Integer> bestConnection = model.pickWagonCards(possibleConnections);
+                List<Integer> bestConnection = model.pickBestConnection(possibleConnections);
                 int i = bestConnection.get(0);
                 int j = bestConnection.get(1);
                 int weight = model.getPathWeight(model.getIndexByIandJ(i,j));
@@ -279,7 +284,87 @@ public class Presenter implements IPresenter {
     }
 
 
+    public void pickCards(int connectionColorCode, int[] optionalOpenCards) { //need to continue, updating the cardPanes NNED TO CHECK IF THE PICKS THAT ARE MADE CHANGE THE MAIN OPTIONAL CARDS AS WELL
+        int chosenCards = 0;
+        int i = 0;
+        while(i < 5 && chosenCards < 2 ) {
+            if (optionalOpenCards[i] == connectionColorCode && chosenCards < 2){
+                addWagonCard(optionalOpenCards[i]);
+                if (!model.wagonStack.isEmpty())
+                    iview.updatePossibleWagon(i, getWagonCard());
+                else {
+                    iview.removePossibleWagon(i);
+                    optionalOpenCards[i] = -1;
+                }
+                chosenCards++;
+                i--;
+            }
+            i++;
+        }
 
+        if (chosenCards == 1){
+            if (!model.wagonStack.isEmpty())
+                addWagonCard(getWagonCard());
+            else{
+                for (int j = 0; j < 5 ; j++) {
+                    if (optionalOpenCards[i] != 8 && optionalOpenCards[i] != -1 && chosenCards< 2) {
+                        addWagonCard(optionalOpenCards[i]);
+                        iview.removePossibleWagon(i);
+                        optionalOpenCards[i] = -1;
+                        chosenCards++;
+                    }
+                }
+            }
+        }
+        if (chosenCards == 0){
+            for (int j = 0; j < 5 ; j++) {
+                if (optionalOpenCards[i] == 8 && chosenCards < 2) {
+                    addWagonCard(optionalOpenCards[i]);
+                    if (!model.wagonStack.isEmpty())
+                        iview.updatePossibleWagon(i, getWagonCard());
+                    else {
+                        iview.removePossibleWagon(i);
+                        optionalOpenCards[i] = -1;
+                    }
+                    chosenCards +=2;
+                }
+            }
+
+
+            while (!model.wagonStack.isEmpty() && chosenCards < 2) {
+                addWagonCard(getWagonCard());
+                chosenCards++;
+            }
+
+            if(chosenCards == 1){
+                for (int j = 0; j < 5 ; j++) {
+                    if ( optionalOpenCards[i] != -1 && chosenCards < 2) {
+                        addWagonCard(optionalOpenCards[i]);
+                        iview.removePossibleWagon(i);
+                        optionalOpenCards[i] = -1;
+                        chosenCards++;
+                    }
+                }
+            }
+
+            else if (chosenCards == 0){
+                i = 0;
+                while(i < 5 && chosenCards < 2 ) {
+                    if (optionalOpenCards[i] != -1 && chosenCards < 2) {
+                        addWagonCard(optionalOpenCards[i]);
+                        iview.removePossibleWagon(i);
+                        optionalOpenCards[i] = -1;
+                        chosenCards++;
+                        i--;
+                    }
+                    i++;
+                }
+            }
+
+
+        }
+
+    }
 
 }
 

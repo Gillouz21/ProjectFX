@@ -6,8 +6,7 @@ import java.util.ArrayList;
 
 public interface IPresenter {
     void pathClicked(int index);
-    public void passPanes(ArrayList<Pane> panes);
-    public Model getModel();
+    void passPanes(ArrayList<Pane> panes);Model getModel();
     ArrayList<Route> routeDeckClicked();
     String getCityName(int cityNum);
     void insertRouteToPlayerRouteList(Route index);

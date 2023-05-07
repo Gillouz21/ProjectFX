@@ -240,8 +240,10 @@ public class Main extends Application implements IView {
                           if (!firstChoice){                                        //if multicolored and the player didn't make the first choice
                               presenter.addWagonCard(index);
                               updateWagonLabel(index);
-                              if (presenter.getModel().wagonStack.isEmpty())
+                              if (presenter.getModel().wagonStack.isEmpty()){
                                   removePossibleWagon(paneIndex);
+                                  optionalWagonCards[paneIndex] = -1;
+                              }
                               else
                                   updatePossibleWagon(paneIndex, presenter.getWagonCard());
                               presenter.getModel().nextPlayer();
@@ -253,8 +255,10 @@ public class Main extends Application implements IView {
                         else{
                             presenter.addWagonCard(index);
                             updateWagonLabel(index);
-                            if (presenter.getModel().wagonStack.isEmpty())
+                            if (presenter.getModel().wagonStack.isEmpty()) {
                                 removePossibleWagon(paneIndex);
+                                optionalWagonCards[paneIndex] = -1;
+                            }
                             else
                                 updatePossibleWagon(paneIndex, presenter.getWagonCard());
                             if (firstChoice) {
@@ -296,13 +300,13 @@ public class Main extends Application implements IView {
         }
     }
 
-    private void updatePossibleWagon(int pI, int key) {
+    public void updatePossibleWagon(int pI, int key) {
         ImageView img = (ImageView) wagonCardPanes.get(pI).getChildren().get(0);
         img.setImage(wagonsImages.get(key));
         optionalWagonCards[pI] = key;
     }
 
-    private void removePossibleWagon(int paneIndex){
+    public void removePossibleWagon(int paneIndex){
         Pane p = wagonCardPanes.get(paneIndex);
         p.setVisible(false);
     }
@@ -374,4 +378,7 @@ public class Main extends Application implements IView {
         l.setText(s);
     }
 
+    public int[] getOptionalWagonCards(){
+        return optionalWagonCards;
+    }
 }
