@@ -23,20 +23,30 @@ public class Presenter implements IPresenter {
     }
 
     //FIRST OPTION OF USER TURN
-    public void pathClicked(int index){
+    public String pathClicked(int index){
+        String str= "";
+        model.occupyPath(model.getPlayer().getPlayerID(), index); //occupies the path and add points to the player
+        iview.changeColor(index, model.getPlayerColor(model.getPlayer().getPlayerID()));
 
-        model.occupyPath(0, index); //occupies the path and add points to the player
-        iview.changeColor(index, model.getPlayerColor(0));
-
-        for (Route route: model.getPlayer().getRouteList()) {
-            if (!route.isComplete() && model.isRouteCompleted(route)){
-                route.setComplete(true);
+        Iterator<Route> iterator = model.getPlayer().getRouteList().iterator();
+        while (iterator.hasNext()) {
+            Route route = iterator.next();
+            if (model.isRouteCompleted(route)) {
+                if(model.getPlayer().getPlayerID() == 1)
+                    str = str + String.format("The Bot has completed a path between %s and %s\n", model.cityMap.get(route.getCities()[0]), model.cityMap.get(route.getCities()[1]) );
                 model.getPlayer().incPoints(route.getPoints());
+                iterator.remove();
             }
         }
-        if (model.isWin(0)) {
-            //end game}
+
+
+        if (model.isLastTurn(model.getPlayer().getPlayerID())) {
+            iview.showLastTurn();
+            model.setLastTurnCounter();
         }
+
+
+        return str;
 
     }
 
@@ -72,70 +82,116 @@ public class Presenter implements IPresenter {
     public void addWagonCard(int index) {
         model.getPlayer().AddCard(index);
     }
+//FOR TESTING
+//    public void botMove(){
+//        Route r1  =new Route(0,6, 12);
+//        ArrayList<Route> optionalRoutes = new ArrayList<>();
+//        optionalRoutes.add(r1);
+//        List<List<Integer>> chosenPath = bestPath(optionalRoutes);
+//        model.nextPlayer();
+//    }
+//
 
     @Override
     public void botMove() {
         String moveMade = "";
         if (model.getPlayer().getRouteList().isEmpty()) // if the bot doesn't have destination cards
         {
-            // pick destination cards
-            ArrayList<Route> optionalRoutes = model.getRouteCards();
-            List<List<Integer>> chosenPath = bestPath(optionalRoutes);
-
-            List<Integer> cityList = pathToListOfVertices(chosenPath);
-
-            //iterate over the possible destination cards and insert them if the bot has picked them
-            Iterator<Route> iter = optionalRoutes.iterator();
-            while (iter.hasNext()) {
-                Route r = iter.next();
-                if (cityList.contains(r.getCities()[0]) && cityList.contains(r.getCities()[1])) {
-                    insertRouteToPlayerRouteList(r);
-                    iter.remove();
-                }
-            }
-
-            insertRouteQueue(optionalRoutes);   //insert the rest of the destination cards back to the stack
+            pickDestinationCards();
             moveMade = "The Bot has picked Destination Cards";
         }
         else {
             //pick best Route
-            List<List<Integer>> chosenPath = bestPath(model.getPlayer().getRouteList()); //just for debugging im using the users cards
-
-            //check if the bot has enough cards to claim the connection
-            List<List<Integer>> possibleConnections = getOccupyableConnections(chosenPath);
-
-            if (possibleConnections == null){
-                List<Integer> bestConnection = model.pickBestConnection(chosenPath);
-                int i = bestConnection.get(0);
-                int j = bestConnection.get(1);
-                int connectionColorCode = model.getPathColorCode(model.getIndexByIandJ(i,j));
-
-                int[] optionalOpenCards = iview.getOptionalWagonCards();
-                pickCards(connectionColorCode, optionalOpenCards);       // can be improved by considering multiple connections of different colors
-
-            }
-            else{
-                List<Integer> bestConnection = model.pickBestConnection(possibleConnections);
-                int i = bestConnection.get(0);
-                int j = bestConnection.get(1);
-                int weight = model.getPathWeight(model.getIndexByIandJ(i,j));
-                int connectionColorCode = model.getPathColorCode(model.getIndexByIandJ(i,j));
-                while (weight > 0 ){
-                    if (model.getPlayer().getCards()[connectionColorCode] > 0) //cards of the same color
-                        model.getPlayer().getCards()[connectionColorCode]--;
-                    else
-                        model.getPlayer().getCards()[8]--;  // joker cards
-                    weight--;
+            boolean pickedDestinationCard = false;
+            List<List<Integer>> chosenPath = bestPath(model.getPlayer().getRouteList()); //could be null
+            List<List<Integer>> possibleConnections = null;
+            if (chosenPath == null){
+                if(!model.isEndGame() || model.getPlayer().getRouteList().size() < 3){
+                    pickDestinationCards();
+                    pickedDestinationCard = true;
+                    moveMade = "The Bot has picked Destination Cards";
                 }
-                model.occupyPath(model.getPlayer().getPlayerID(),model.getIndexByIandJ(i, j));
-                iview.changeColor(model.getIndexByIandJ(i, j), model.getPlayerColor(model.getPlayer().getPlayerID()));
-                moveMade = "The Bot has claimed a path";
+                else{
+                    //complete as many paths possible
+                    possibleConnections = model.getAllFreeConnection();
+                }
+            }
+            else {
+                //check if the bot has enough cards to claim the connection
+                possibleConnections = getOccupyableConnections(chosenPath);
+            }
+
+            if(!pickedDestinationCard) {
+                int connectionColorCode;
+                if (possibleConnections != null && possibleConnections.size() == 0) {
+                    List<Integer> bestConnection = model.pickBestConnection(chosenPath);
+                    int i = bestConnection.get(0);
+                    int j = bestConnection.get(1);
+                    connectionColorCode = model.getPathColorCode(model.getIndexByIandJ(i, j));
+
+
+                    int[] optionalOpenCards = iview.getOptionalWagonCards();
+                    pickCards(connectionColorCode, optionalOpenCards);       // can be improved by considering multiple connections of different colors
+
+                    //checks if needs shuffle
+                    if (model.wagonStack.isEmpty() && model.cannotCompleteTurn(iview.getOptionalWagonCards())) {
+                        model.insertUsedToWagonStack();
+                        iview.initOptionalWagonCards();
+                    }
+
+                    moveMade = "The Bot has Picked Wagon Cards";
+                } else {
+                    List<Integer> bestConnection = model.pickBestConnection(possibleConnections);
+                    int i = bestConnection.get(0);
+                    int j = bestConnection.get(1);
+                    int weight = model.getPathWeight(model.getIndexByIandJ(i, j));
+                    connectionColorCode = model.getPathColorCode(model.getIndexByIandJ(i, j));
+                    while (weight > 0) {
+                        if (model.getPlayer().getCards()[connectionColorCode] > 0) //cards of the same color
+                            model.getPlayer().getCards()[connectionColorCode]--;
+                        else
+                            model.getPlayer().getCards()[8]--;  // joker cards
+                        weight--;
+                    }
+                    pathClicked(model.getIndexByIandJ(i, j)); //returns a string of destination cards completed if completed.
+                    moveMade = "The Bot has claimed a path";
+                    iview.updateWagonsLeft();
+                    if(getModel().lastTurn) {
+                        getModel().lastTurnCounter--;
+                        if (model.lastTurnCounter == 0)
+                            iview.showEndingScreen();
+                    }
+
+                }
+
             }
 
         }
+
         iview.updateBotsMove(moveMade);
+        iview.updatePointLabels();
         model.nextPlayer();
 
+    }
+
+    private void pickDestinationCards() { // ERRORS
+        // pick destination cards
+        ArrayList<Route> optionalRoutes = model.getRouteCards();
+        List<List<Integer>> chosenPath = bestPath(optionalRoutes);
+
+        List<Integer> cityList = pathToListOfVertices(chosenPath);
+
+        //iterate over the possible destination cards and insert them if the bot has picked them
+        Iterator<Route> iter = optionalRoutes.iterator();
+        while (iter.hasNext()) {
+            Route r = iter.next();
+            if (cityList.contains(r.getCities()[0]) && cityList.contains(r.getCities()[1])) {
+                insertRouteToPlayerRouteList(r);
+                iter.remove();
+            }
+        }
+
+        insertRouteQueue(optionalRoutes);   //insert the rest of the destination cards back to the stack
     }
 
     private List<List<Integer>> getOccupyableConnections(List<List<Integer>> chosenPath) {
@@ -146,7 +202,7 @@ public class Presenter implements IPresenter {
             int i = connection.get(0);
             int j = connection.get(1);
             int index = model.getIndexByIandJ(i,j);
-            if (model.canOccupyPath(index)){
+            if (model.canOccupyPath(index) && !model.isConnectionExists(i,j,model.getPlayer().getPlayerID()) && !model.isTaken(i,j,model.getPlayer().getPlayerID())){
                 possibleConnections.add(connection);
             }
         }
@@ -175,7 +231,7 @@ public class Presenter implements IPresenter {
         //get every path for every combo
         for (List<Route> set: routesSet
         ) {
-            routeCombos2Paths.put(set, model.pickRoutes((ArrayList<Route>) set, model.getPlayer().getNumOfWagons()));
+            routeCombos2Paths.put(set, model.pickRoutes((ArrayList<Route>) set, model.getPlayer().getNumOfWagons())); //THERES AN ERROR HERE
             if (routeCombos2Paths.get(set).size() == 0)
                 routeCombos2Paths.remove(set);
         }
@@ -197,7 +253,8 @@ public class Presenter implements IPresenter {
                 pathsScores.put(path, model.calculateScore(cardsCompleted,cardsValue,pathWeight, pathConnections));
             }
         }
-
+        if (pathsScores.size() == 0)
+            return null;
         return Collections.max(pathsScores.entrySet(),Map.Entry.comparingByValue()).getKey(); // pick the path with the max score
     }
 
@@ -287,6 +344,24 @@ public class Presenter implements IPresenter {
     public void pickCards(int connectionColorCode, int[] optionalOpenCards) { //need to continue, updating the cardPanes NNED TO CHECK IF THE PICKS THAT ARE MADE CHANGE THE MAIN OPTIONAL CARDS AS WELL
         int chosenCards = 0;
         int i = 0;
+
+        if (connectionColorCode == 8){
+            for (int j = 0; j < 5; j++) {
+                if (optionalOpenCards[j] == 8){
+                    addWagonCard(8);
+                    if (!model.wagonStack.isEmpty())
+                        iview.updatePossibleWagon(j, getWagonCard());
+                    else {
+                        iview.removePossibleWagon(j);
+                        optionalOpenCards[j] = -1;
+                    }
+                    return;
+                }
+            }
+        }
+
+
+
         while(i < 5 && chosenCards < 2 ) {
             if (optionalOpenCards[i] == connectionColorCode && chosenCards < 2){
                 addWagonCard(optionalOpenCards[i]);
@@ -303,28 +378,31 @@ public class Presenter implements IPresenter {
         }
 
         if (chosenCards == 1){
-            if (!model.wagonStack.isEmpty())
+            if (!model.wagonStack.isEmpty()) {
                 addWagonCard(getWagonCard());
+                chosenCards++;
+            }
             else{
                 for (int j = 0; j < 5 ; j++) {
-                    if (optionalOpenCards[i] != 8 && optionalOpenCards[i] != -1 && chosenCards< 2) {
-                        addWagonCard(optionalOpenCards[i]);
-                        iview.removePossibleWagon(i);
-                        optionalOpenCards[i] = -1;
+                    if (optionalOpenCards[j] != 8 && optionalOpenCards[j] != -1 && chosenCards< 2) {
+                        addWagonCard(optionalOpenCards[j]);
+                        iview.removePossibleWagon(j);
+                        optionalOpenCards[j] = -1;
                         chosenCards++;
                     }
                 }
             }
         }
+
         if (chosenCards == 0){
             for (int j = 0; j < 5 ; j++) {
-                if (optionalOpenCards[i] == 8 && chosenCards < 2) {
-                    addWagonCard(optionalOpenCards[i]);
+                if (optionalOpenCards[j] == 8 && chosenCards < 2) {
+                    addWagonCard(optionalOpenCards[j]);
                     if (!model.wagonStack.isEmpty())
-                        iview.updatePossibleWagon(i, getWagonCard());
+                        iview.updatePossibleWagon(j, getWagonCard());
                     else {
-                        iview.removePossibleWagon(i);
-                        optionalOpenCards[i] = -1;
+                        iview.removePossibleWagon(j);
+                        optionalOpenCards[j] = -1;
                     }
                     chosenCards +=2;
                 }
@@ -338,10 +416,10 @@ public class Presenter implements IPresenter {
 
             if(chosenCards == 1){
                 for (int j = 0; j < 5 ; j++) {
-                    if ( optionalOpenCards[i] != -1 && chosenCards < 2) {
-                        addWagonCard(optionalOpenCards[i]);
-                        iview.removePossibleWagon(i);
-                        optionalOpenCards[i] = -1;
+                    if ( optionalOpenCards[j] != -1 && chosenCards < 2) {
+                        addWagonCard(optionalOpenCards[j]);
+                        iview.removePossibleWagon(j);
+                        optionalOpenCards[j] = -1;
                         chosenCards++;
                     }
                 }
@@ -360,12 +438,11 @@ public class Presenter implements IPresenter {
                     i++;
                 }
             }
-
-
         }
 
-    }
+        iview.setOptionalWagonCards(optionalOpenCards);
 
+    }
 }
 
 

@@ -17,7 +17,7 @@ public class Player {
         this.playerID = playerID;
         this.routeList = new ArrayList<Route>();
         this.points = 0;
-        this.numOfWagons = 45;
+        this.numOfWagons = 35;
         this.cards = new int[9]; //{WHITE, BLUE, YELLOW, PURPLE, ORANGE, BLACK, RED, GREEN, JOKER}
         Arrays.fill(this.cards, 0);
 

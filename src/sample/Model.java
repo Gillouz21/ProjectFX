@@ -3,12 +3,15 @@ package sample;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+
+import javax.crypto.AEADBadTagException;
 import java.util.PriorityQueue;
 import java.util.Comparator;
 
 import java.util.*;
 
 public class Model {
+    final int NUM_OF_WAGONS = 35;
     final int NUM_OF_ROUTES = 26;
     final int NUM_OF_CITIES = 16;
     final int NUM_OF_PLAYERS = 2;
@@ -26,6 +29,8 @@ public class Model {
     Map<Color, Integer> colorsAndNumbers = new HashMap<Color, Integer>(); //{WHITE, BLUE, YELLOW, PURPLE, ORANGE, BLACK, RED, GREEN, JOKER}
     Color[] playersColors = {Color.BLUE, Color.WHITE, Color.GREEN, Color.ORANGE};
     List<Integer> botsCityList= new ArrayList<>();
+    int lastTurnCounter = NUM_OF_PLAYERS + 1; //because activated right after the players turn (and he needs to play another turn himself as well)
+    boolean lastTurn = false;
 
 
     public Model() {
@@ -90,11 +95,14 @@ public class Model {
         values.add(new Route(3,14, 15));
         values.add(new Route(12,15, 6));
         values.add(new Route(7,10, 13));
+
+
+
+
         values.add(new Route(9,12, 6));
         values.add(new Route(0,11, 18));
         values.add(new Route(2,8, 12));
         values.add(new Route(1,10, 13));
-
         Collections.shuffle(values);
 
         // Push the shuffled values into the Queue
@@ -221,8 +229,8 @@ public class Model {
         return playersColors[player];
     }
 
-    public boolean isWin(int player) {
-        return (this.PLAYER_ARR[player].getPoints() >= 100);
+    public boolean isLastTurn(int player) {
+        return (this.PLAYER_ARR[player].getNumOfWagons() <= 2 );
     }
 
     public void nextPlayer() {
@@ -278,7 +286,7 @@ public class Model {
 
         sum = PLAYER_ARR[currentPlayer].getCards()[colorsAndNumbers.get(c)] + PLAYER_ARR[currentPlayer].getCards()[8] ;
 
-        return sum >= w;
+        return sum >= w && PLAYER_ARR[currentPlayer].getNumOfWagons() >= w;
     }
 
     public void occupyPath(int player, int index) {
@@ -383,7 +391,7 @@ public class Model {
                 if (u == dest) {
                     // Reached destination, build all paths
                     List<Integer> path = new ArrayList<>();
-                    buildPaths(paths, path, source, dest, dist, playerID, explored);
+                    buildPaths(paths, path, source, dest, dist, playerID, explored, new HashSet<Integer>());
                     return paths;
                 }
                 if (visited[u]) {
@@ -400,7 +408,7 @@ public class Model {
                         }
 
                         // Check if a connection already exists between u and v
-                        if( isConnectionExists( u,  v, playerID) || (explored!= null && explored.contains(List.of(u, v)))) {
+                        else if( isConnectionExists( u,  v, playerID) || (explored!= null && explored.contains(List.of(u, v)))) {
                             alt = dist[u] + 0;
                         }
 
@@ -416,8 +424,9 @@ public class Model {
             return paths; // No paths found
     }
 
-    public void buildPaths( List<List<List<Integer>>> paths, List<Integer> path, int u, int dest, int[] dist, int playerID, List<List<Integer>> explored) {
+    public void buildPaths( List<List<List<Integer>>> paths, List<Integer> path, int u, int dest, int[] dist, int playerID, List<List<Integer>> explored, Set<Integer> visited) {
         path.add(u);
+        visited.add(u);
         if (u == dest) {
             List<List<Integer>> edgesPath = verticesToEdges(path);
             paths.add(new ArrayList<>(edgesPath));
@@ -437,12 +446,14 @@ public class Model {
                         x = dist[u] + 0;
                     }
 
-                    if(dist[v] == x)
-                        buildPaths( paths, path, v, dest, dist, playerID, explored);
+                    if(dist[v] == x && !visited.contains(v))
+                        buildPaths( paths, path, v, dest, dist, playerID, explored, visited);
                 }
             }
         }
         path.remove(path.size() - 1);
+        visited.remove(u);
+
     }
 
     public List<List<Integer>> verticesToEdges(List<Integer> path) {
@@ -542,7 +553,8 @@ public class Model {
         int sum = 0;
         for (List<Integer> connection: path
              ) {
-            sum += board[connection.get(0)][connection.get(1)].getWeight();
+            if(!isConnectionExists(connection.get(0), connection.get(1), getPlayer().getPlayerID()))
+                sum += board[connection.get(0)][connection.get(1)].getWeight();
         }
         return sum;
     }
@@ -552,7 +564,18 @@ public class Model {
 
     }
 
-    public Integer getIndexByIandJ(int i, int j) {
+    public Integer getIndexByIandJ(int i, int j) { //
+        for (Map.Entry<Integer, Integer[]> entry : routeMap.entrySet()) {
+            Integer[] value = entry.getValue();
+            if ((value[0].equals(i) && value[1].equals(j))
+                    || (value[0].equals(j) && value[1].equals(i))) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    public Integer getIndexByIandJ(int i, int j, Color c) { // for two roads; needs to fix in the whole code
         for (Map.Entry<Integer, Integer[]> entry : routeMap.entrySet()) {
             Integer[] value = entry.getValue();
             if ((value[0].equals(i) && value[1].equals(j))
@@ -564,39 +587,42 @@ public class Model {
     }
 
     public List<Integer> pickBestConnection(List<List<Integer>> chosenPath) {
-
         int score;
         int maxScore = -1;
         List<Integer> chosenConnection = null;
         for (List<Integer> connection : chosenPath
         ) {
-            int i = connection.get(0);
-            int j = connection.get(1);
-            score = 0;
-            Connection c = board[i][j];
-            if(c.getWeight() == 2)
-                score += 50;
-            else if(c.getWeight() == 3)
-                score += 30;
-            else if (c.getWeight() == 4)
-                score += 20;
 
-            //close to other bots connections
-            if(isNearOtherConnections(connection, currentPlayer))
-                score += 60;
 
-            //close to opponents
-            if(isNearOtherConnections(connection, 0))
-                score += 30;
+                int i = connection.get(0);
+                int j = connection.get(1);
+            if(!isConnectionExists(i,j,currentPlayer)){
+                score = 0;
+                Connection c = board[i][j];
+                if (c.getWeight() == 2)
+                    score += 50;
+                else if (c.getWeight() == 3)
+                    score += 30;
+                else if (c.getWeight() == 4)
+                    score += 20;
 
-            if(botsCityList.contains(i) && botsCityList.contains(j))
-                score += 50;
-            else if(botsCityList.contains(i) || botsCityList.contains(j))
-                score += 20;
+                //close to other bots connections
+                if (isNearOtherConnections(connection, currentPlayer))
+                    score += 60;
 
-            if(score > maxScore) {
-                maxScore = score;
-                chosenConnection = connection;
+                //close to opponents
+                if (isNearOtherConnections(connection, 0))
+                    score += 30;
+
+                if (!(botsCityList.contains(i) && botsCityList.contains(j)))
+                    score += 50;
+                else if (!botsCityList.contains(i) || !botsCityList.contains(j))
+                    score += 20;
+
+                if (score > maxScore) {
+                    maxScore = score;
+                    chosenConnection = connection;
+                }
             }
         }
         return chosenConnection;
@@ -615,5 +641,87 @@ public class Model {
         return false;
     }
 
+    public boolean cannotCompleteTurn(int[] openCards){
+        List<Integer> temp = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            if (openCards[i] != -1)
+                temp.add(openCards[i]);
+            }
 
+        if (temp.size() == 2)
+        {
+            return (temp.get(0) == 8 && temp.get(1) !=8) || (temp.get(1) == 8 && temp.get(0) !=8);
+        }
+        else if (temp.size() == 1){
+            return temp.get(0) != 8;
+        }
+
+        if (wagonStack.isEmpty() && temp.size()==0)
+            return true;
+
+        return false;
+    }
+
+    public boolean isEndGame(){
+        for (int i = 0; i <NUM_OF_PLAYERS; i++) {
+            if(PLAYER_ARR[i].getPoints() > 70)
+                return true;
+        }
+        return false;
+    }
+
+    public List<List<Integer>> getAllFreeConnection() {
+        List<List<Integer>> allFreeConnections = new ArrayList<>();
+        for (int i = 0; i < NUM_OF_CITIES ; i++) {
+            for (int j = 0; j < NUM_OF_CITIES; j++) {
+                if (!board[i][j].isComplete()){
+                    allFreeConnections.add(new ArrayList<>(Arrays.asList(i, j)));
+                }
+            }
+        }
+        return allFreeConnections;
+    }
+
+    public void setLastTurnCounter() {
+        lastTurn = true;
+    }
+
+    public String whoWon() {
+//        int[] pointsArr = new int[NUM_OF_PLAYERS];
+//        int max = -1;
+//        for (int i = 0; i < NUM_OF_PLAYERS; i++) {
+//            pointsArr[i] = PLAYER_ARR[i].getPoints() - deductPointsByRoute(PLAYER_ARR[i].getRouteList());
+//            if (pointsArr[i] > max)
+//                max = pointsArr[i];
+//        }
+//
+//        List<Integer> listOfWinners = new ArrayList<>();
+//        for (int i = 0; i < NUM_OF_PLAYERS; i++) {
+//            if (pointsArr[i] == max)
+//                listOfWinners.add(i);
+//        }
+//        if (listOfWinners.size() == 1)
+//            str = "Game Over!\nPlayer %d Won with %d points!";
+//        else{
+//            str = "Game Over!\nIts a tie! The players &d"
+//        }
+        int user = PLAYER_ARR[0].getPoints() - deductPointsByRoute(PLAYER_ARR[0].getRouteList());
+        int bot = PLAYER_ARR[1].getPoints() - deductPointsByRoute(PLAYER_ARR[1].getRouteList());
+        if (user > bot)
+            return String.format("Game Over!\nYou won with %d points!", user);
+        else if (user == bot)
+            return String.format("Game Over!\nIt's a Tie! both of you finished the game with %d points!", user);
+        else
+            return String.format("Game Over!\nYou lost :(,the bot won with %d points!", bot);
+    }
+
+
+    private int deductPointsByRoute(ArrayList<Route> routeList) {
+        int sum = 0;
+        for (Route r: routeList
+             ) {
+            sum += r.getPoints();
+        }
+        return sum;
+    }
 }

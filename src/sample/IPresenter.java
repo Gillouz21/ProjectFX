@@ -5,7 +5,7 @@ import javafx.scene.layout.Pane;
 import java.util.ArrayList;
 
 public interface IPresenter {
-    void pathClicked(int index);
+    String pathClicked(int index);
     void passPanes(ArrayList<Pane> panes);Model getModel();
     ArrayList<Route> routeDeckClicked();
     String getCityName(int cityNum);
