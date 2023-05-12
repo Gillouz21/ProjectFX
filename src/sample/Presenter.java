@@ -95,7 +95,7 @@ public class Presenter implements IPresenter {
     @Override
     public void botMove() {
         String moveMade = "";
-        if (model.getPlayer().getRouteList().isEmpty()) // if the bot doesn't have destination cards
+        if (model.getPlayer().getRouteList().isEmpty() && !model.lastTurn) // if the bot doesn't have destination cards
         {
             pickDestinationCards();
             moveMade = "The Bot has picked Destination Cards";
@@ -106,7 +106,7 @@ public class Presenter implements IPresenter {
             List<List<Integer>> chosenPath = bestPath(model.getPlayer().getRouteList()); //could be null
             List<List<Integer>> possibleConnections = null;
             if (chosenPath == null){
-                if(!model.isEndGame() || model.getPlayer().getRouteList().size() < 3){
+                if(!model.isEndGame() ){
                     pickDestinationCards();
                     pickedDestinationCard = true;
                     moveMade = "The Bot has picked Destination Cards";
@@ -119,6 +119,7 @@ public class Presenter implements IPresenter {
             else {
                 //check if the bot has enough cards to claim the connection
                 possibleConnections = getOccupyableConnections(chosenPath);
+
             }
 
             if(!pickedDestinationCard) {
@@ -127,7 +128,7 @@ public class Presenter implements IPresenter {
                     List<Integer> bestConnection = model.pickBestConnection(chosenPath);
                     int i = bestConnection.get(0);
                     int j = bestConnection.get(1);
-                    connectionColorCode = model.getPathColorCode(model.getIndexByIandJ(i, j));
+                    connectionColorCode = model.getPathColorCode(model.getIndexByIAndJ(i, j));
 
 
                     int[] optionalOpenCards = iview.getOptionalWagonCards();
@@ -144,8 +145,12 @@ public class Presenter implements IPresenter {
                     List<Integer> bestConnection = model.pickBestConnection(possibleConnections);
                     int i = bestConnection.get(0);
                     int j = bestConnection.get(1);
-                    int weight = model.getPathWeight(model.getIndexByIandJ(i, j));
-                    connectionColorCode = model.getPathColorCode(model.getIndexByIandJ(i, j));
+                    int weight = model.getPathWeight(model.getIndexByIAndJ(i, j));
+
+                    if (model.board[i][j].getNumOfRoads() == 2)
+                        connectionColorCode = model.colorsAndNumbers.get(model.get2PathColor(i,j));
+                    else
+                        connectionColorCode = model.getPathColorCode(model.getIndexByIAndJ(i, j));
                     while (weight > 0) {
                         if (model.getPlayer().getCards()[connectionColorCode] > 0) //cards of the same color
                             model.getPlayer().getCards()[connectionColorCode]--;
@@ -153,7 +158,15 @@ public class Presenter implements IPresenter {
                             model.getPlayer().getCards()[8]--;  // joker cards
                         weight--;
                     }
-                    pathClicked(model.getIndexByIandJ(i, j)); //returns a string of destination cards completed if completed.
+                    if (model.board[i][j].getNumOfRoads() == 2) {
+                        int index = model.getIndexByIAndJ(i, j, model.get2PathColor(i, j));
+                        //CONTINUE FROM HERE
+                        //pass the correct index to the path clicked somehow
+                        // pathClicked(model.getIndexByIAndJ(i, j, model.get2PathColor(i,j)));
+                        }
+                    else
+                        pathClicked(model.getIndexByIAndJ(i, j));
+
                     moveMade = "The Bot has claimed a path";
                     iview.updateWagonsLeft();
                     if(getModel().lastTurn) {
@@ -179,17 +192,56 @@ public class Presenter implements IPresenter {
         ArrayList<Route> optionalRoutes = model.getRouteCards();
         List<List<Integer>> chosenPath = bestPath(optionalRoutes);
 
-        List<Integer> cityList = pathToListOfVertices(chosenPath);
+        if (chosenPath == null){ //if cannot complete any route pick the one with the minimum points;
+            Route minRoute = null;
+            int minPoints = Integer.MAX_VALUE;
 
-        //iterate over the possible destination cards and insert them if the bot has picked them
-        Iterator<Route> iter = optionalRoutes.iterator();
-        while (iter.hasNext()) {
-            Route r = iter.next();
-            if (cityList.contains(r.getCities()[0]) && cityList.contains(r.getCities()[1])) {
-                insertRouteToPlayerRouteList(r);
-                iter.remove();
+            for (Route route : optionalRoutes) {
+                int points = route.getPoints();
+                if (points < minPoints) {
+                    minPoints = points;
+                    minRoute = route;
+                }
+            }
+            insertRouteToPlayerRouteList(minRoute);
+            optionalRoutes.remove(minRoute);
+
+        }
+        else{
+            List<Integer> cityList = pathToListOfVertices(chosenPath);
+
+            //iterate over the possible destination cards and insert them if the bot has picked them
+            Iterator<Route> iter = optionalRoutes.iterator();
+            while (iter.hasNext()) {
+                Route r = iter.next();
+                if (cityList.contains(r.getCities()[0]) && cityList.contains(r.getCities()[1])) {
+                    insertRouteToPlayerRouteList(r);
+                    iter.remove();
+                }
             }
         }
+
+        if (model.firstTurn) {
+            while (model.getPlayer().getRouteList().size() < 2) {
+                Route minRoute = null;
+                int minPoints = Integer.MAX_VALUE;
+                Iterator<Route> iterator = optionalRoutes.iterator();
+
+                while (iterator.hasNext()) {
+                    Route route = iterator.next();
+                    int points = route.getPoints();
+                    if (points < minPoints) {
+                        minPoints = points;
+                        minRoute = route;
+                    }
+                }
+
+                insertRouteToPlayerRouteList(minRoute);
+                iterator.remove();
+            }
+            model.firstTurn = false;
+        }
+
 
         insertRouteQueue(optionalRoutes);   //insert the rest of the destination cards back to the stack
     }
@@ -201,7 +253,7 @@ public class Presenter implements IPresenter {
              ) {
             int i = connection.get(0);
             int j = connection.get(1);
-            int index = model.getIndexByIandJ(i,j);
+            int index = model.getIndexByIAndJ(i,j);
             if (model.canOccupyPath(index) && !model.isConnectionExists(i,j,model.getPlayer().getPlayerID()) && !model.isTaken(i,j,model.getPlayer().getPlayerID())){
                 possibleConnections.add(connection);
             }

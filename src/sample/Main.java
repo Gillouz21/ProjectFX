@@ -71,6 +71,8 @@ public class Main extends Application implements IView {
 
 
 
+
+
         setMouseClicksLister();
 
         primaryStage.setScene(s);

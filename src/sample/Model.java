@@ -4,7 +4,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import javax.crypto.AEADBadTagException;
 import java.util.PriorityQueue;
 import java.util.Comparator;
 
@@ -18,7 +17,7 @@ public class Model {
 
     private Player[] PLAYER_ARR = new Player[NUM_OF_PLAYERS];
     private int currentPlayer = 0;
-    private Connection[][] board= new Connection[NUM_OF_CITIES][NUM_OF_CITIES];
+    protected Connection[][] board= new Connection[NUM_OF_CITIES][NUM_OF_CITIES];
     Stack<Integer> wagonStack = new Stack<>();
     Stack<Integer> usedWagonStack = new Stack<>();
     Queue<Route> routeQueue= new LinkedList<>() ;
@@ -26,11 +25,16 @@ public class Model {
     Map< Integer, String> cityMap = new HashMap<>();
     Map< Integer, Integer> wagonsToPoints = new HashMap<>();
     Map< Integer, Integer> doubledPaths = new HashMap<>();
+    Map< Integer, Color> pathsIndexToColor = new HashMap<>();
     Map<Color, Integer> colorsAndNumbers = new HashMap<Color, Integer>(); //{WHITE, BLUE, YELLOW, PURPLE, ORANGE, BLACK, RED, GREEN, JOKER}
-    Color[] playersColors = {Color.BLUE, Color.WHITE, Color.GREEN, Color.ORANGE};
-    List<Integer> botsCityList= new ArrayList<>();
+    Color[] playersColors = {Color.BLUE, Color.WHITE};
+    List<Integer> botsCityList = new ArrayList<>();
     int lastTurnCounter = NUM_OF_PLAYERS + 1; //because activated right after the players turn (and he needs to play another turn himself as well)
     boolean lastTurn = false;
+    boolean firstTurn = true;
+    List<Integer> criticalCities = new ArrayList<>();
+
+
 
 
     public Model() {
@@ -62,6 +66,8 @@ public class Model {
 
         //initializing doubledPaths that maps which path fits the right index in the Connection
         initDoubledPaths();
+
+
     }
 
     public void initWagonStack() {
@@ -186,7 +192,20 @@ public class Model {
         cityMap.put(13, "Miami");
         cityMap.put(14, "Charleston");
         cityMap.put(15, "New York");
-    }//so far, no need to use these. keeping the function just to remember the cities and their number
+    }
+
+    public void initCriticalCities(){
+        for (int i = 0; i < NUM_OF_CITIES; i++) {
+            int counter = 0;
+            for (int j = 0; j < NUM_OF_CITIES; j++) {
+                if (board[i][j] != null)
+                    counter++;
+            }
+            if (counter <= 2){
+                criticalCities.add(i);
+            }
+        }
+    }
 
     //inset to connection board the data
     public void initPossibleConnections(ArrayList<Pane> panes){
@@ -217,8 +236,13 @@ public class Model {
             board[array[1]][array[0]] = board[array[0]][array[1]]; //for symmetrical purposes
             i++;
 
+            int index = Integer.valueOf(panes.get(i).getId().split("e")[1]);
+            pathsIndexToColor.put(index,fillColor);
+
         }
 
+        //initializing criticalCities that contains the cities with 2 or less connection
+        initCriticalCities();
     }
 
     public Player getPlayer() {
@@ -403,6 +427,7 @@ public class Model {
                     if (board[u][v] != null) {
                         int alt = dist[u] + board[u][v].getWeight();
 
+                        //check if the route is taken by someone else
                         if(isTaken(u,v,playerID)) {
                             alt = Integer.MAX_VALUE;
                         }
@@ -564,22 +589,20 @@ public class Model {
 
     }
 
-    public Integer getIndexByIandJ(int i, int j) { //
+    public Integer getIndexByIAndJ(int i, int j) { //
         for (Map.Entry<Integer, Integer[]> entry : routeMap.entrySet()) {
             Integer[] value = entry.getValue();
-            if ((value[0].equals(i) && value[1].equals(j))
-                    || (value[0].equals(j) && value[1].equals(i))) {
+            if ((value[0].equals(i) && value[1].equals(j)) || (value[0].equals(j) && value[1].equals(i))) {
                 return entry.getKey();
             }
         }
         return null;
     }
 
-    public Integer getIndexByIandJ(int i, int j, Color c) { // for two roads; needs to fix in the whole code
+    public Integer getIndexByIAndJ(int i, int j, Color c) { // for two roads; needs to fix in the whole code FIXXXXXX
         for (Map.Entry<Integer, Integer[]> entry : routeMap.entrySet()) {
             Integer[] value = entry.getValue();
-            if ((value[0].equals(i) && value[1].equals(j))
-                    || (value[0].equals(j) && value[1].equals(i))) {
+            if ((value[0].equals(i) && value[1].equals(j)) || (value[0].equals(j) && value[1].equals(i)) ) {
                 return entry.getKey();
             }
         }
@@ -618,6 +641,10 @@ public class Model {
                     score += 50;
                 else if (!botsCityList.contains(i) || !botsCityList.contains(j))
                     score += 20;
+
+                //if one of the cities is in the critical cities list.
+                if (criticalCities.contains(i) || criticalCities.contains(j))
+                    score += 80;
 
                 if (score > maxScore) {
                     maxScore = score;
@@ -664,7 +691,7 @@ public class Model {
 
     public boolean isEndGame(){
         for (int i = 0; i <NUM_OF_PLAYERS; i++) {
-            if(PLAYER_ARR[i].getPoints() > 70)
+            if(PLAYER_ARR[i].getPoints() > 80 || PLAYER_ARR[i].getNumOfWagons() < 8)
                 return true;
         }
         return false;
@@ -687,24 +714,6 @@ public class Model {
     }
 
     public String whoWon() {
-//        int[] pointsArr = new int[NUM_OF_PLAYERS];
-//        int max = -1;
-//        for (int i = 0; i < NUM_OF_PLAYERS; i++) {
-//            pointsArr[i] = PLAYER_ARR[i].getPoints() - deductPointsByRoute(PLAYER_ARR[i].getRouteList());
-//            if (pointsArr[i] > max)
-//                max = pointsArr[i];
-//        }
-//
-//        List<Integer> listOfWinners = new ArrayList<>();
-//        for (int i = 0; i < NUM_OF_PLAYERS; i++) {
-//            if (pointsArr[i] == max)
-//                listOfWinners.add(i);
-//        }
-//        if (listOfWinners.size() == 1)
-//            str = "Game Over!\nPlayer %d Won with %d points!";
-//        else{
-//            str = "Game Over!\nIts a tie! The players &d"
-//        }
         int user = PLAYER_ARR[0].getPoints() - deductPointsByRoute(PLAYER_ARR[0].getRouteList());
         int bot = PLAYER_ARR[1].getPoints() - deductPointsByRoute(PLAYER_ARR[1].getRouteList());
         if (user > bot)
@@ -723,5 +732,17 @@ public class Model {
             sum += r.getPoints();
         }
         return sum;
+    }
+
+    public Color get2PathColor(int i, int j) {
+        Connection temp = board[i][j];
+        if (temp.getPlayerID()[0] == -1 && temp.getPlayerID()[1] == -1)
+            return temp.getColor()[0];//pick the first
+        else{
+            if (temp.getPlayerID()[0] != -1 && temp.getPlayerID()[1] == -1) //if first is taken take the second
+                return temp.getColor()[1];
+            else
+                return temp.getColor()[0];
+        }
     }
 }
