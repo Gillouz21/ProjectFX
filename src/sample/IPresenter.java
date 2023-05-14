@@ -20,4 +20,6 @@ public interface IPresenter {
     void botMove();
 
     void useWagonCard(int playerWagonCardID);
+
+    void hasCompletedDestinationCards();
 }

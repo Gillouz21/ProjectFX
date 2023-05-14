@@ -234,11 +234,11 @@ public class Model {
             board[array[0]][array[1]].setColor(temp);
 
             board[array[1]][array[0]] = board[array[0]][array[1]]; //for symmetrical purposes
-            i++;
+
 
             int index = Integer.valueOf(panes.get(i).getId().split("e")[1]);
             pathsIndexToColor.put(index,fillColor);
-
+            i++;
         }
 
         //initializing criticalCities that contains the cities with 2 or less connection
@@ -602,7 +602,8 @@ public class Model {
     public Integer getIndexByIAndJ(int i, int j, Color c) { // for two roads; needs to fix in the whole code FIXXXXXX
         for (Map.Entry<Integer, Integer[]> entry : routeMap.entrySet()) {
             Integer[] value = entry.getValue();
-            if ((value[0].equals(i) && value[1].equals(j)) || (value[0].equals(j) && value[1].equals(i)) ) {
+            if ((value[0].equals(i) && value[1].equals(j)) || (value[0].equals(j) && value[1].equals(i))  ) {
+                if (pathsIndexToColor.get((entry.getKey())) == c)
                 return entry.getKey();
             }
         }
@@ -701,7 +702,7 @@ public class Model {
         List<List<Integer>> allFreeConnections = new ArrayList<>();
         for (int i = 0; i < NUM_OF_CITIES ; i++) {
             for (int j = 0; j < NUM_OF_CITIES; j++) {
-                if (!board[i][j].isComplete()){
+                if (board[i][j] != null &&!board[i][j].isComplete()){
                     allFreeConnections.add(new ArrayList<>(Arrays.asList(i, j)));
                 }
             }
@@ -745,4 +746,57 @@ public class Model {
                 return temp.getColor()[0];
         }
     }
+
+
+    public List<Integer> findLongestPath() {
+        int longestPath = 0;
+        List<Integer> maxPlayers = new ArrayList<>();
+        Map<Integer, Integer> playersLongestPaths = new HashMap<>();
+        for (int i = 0; i <NUM_OF_PLAYERS ; i++) {
+            boolean[] visited = new boolean[NUM_OF_CITIES];
+            for (int j = 0; j < NUM_OF_CITIES; j++) {
+                if (!visited[j]) {
+                    int currentPathLength = dfsL(visited, j, i);
+                    if (currentPathLength > longestPath) {
+                        longestPath = currentPathLength;
+                    }
+                }
+            }
+            playersLongestPaths.put(i, longestPath);
+            longestPath = 0;
+        }
+        int maxLength = Integer.MIN_VALUE;
+
+        for (Map.Entry<Integer, Integer> entry : playersLongestPaths.entrySet()) {
+            int playerId = entry.getKey();
+            int value = entry.getValue();
+            if (value > maxLength){
+                maxPlayers.clear();
+                maxPlayers.add(playerId);
+                maxLength = value;
+
+            } else if (value == maxLength) {
+                maxPlayers.add(playerId);
+            }
+        }
+        return maxPlayers;
+    }
+
+    private int dfsL(boolean[] visited, int source, int player) {
+        visited[source] = true;
+        int maxLength = 0;
+
+        for (int i = 0; i < NUM_OF_CITIES; i++) {
+            if (isConnectionExists(source, i, player) && !visited[i]) {
+                int pathLength = board[source][i].getWeight() + dfsL(visited, i, player);
+                if (pathLength > maxLength) {
+                    maxLength = pathLength;
+                }
+            }
+        }
+
+        visited[source] = false;
+        return maxLength;
+    }
+
 }

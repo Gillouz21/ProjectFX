@@ -124,8 +124,13 @@ public class Presenter implements IPresenter {
 
             if(!pickedDestinationCard) {
                 int connectionColorCode;
-                if (possibleConnections != null && possibleConnections.size() == 0) {
-                    List<Integer> bestConnection = model.pickBestConnection(chosenPath);
+                if (possibleConnections.size() == 0) {
+                    List<Integer> bestConnection;
+                    if (chosenPath == null)
+                        bestConnection = model.pickBestConnection(possibleConnections);
+                    else
+                        bestConnection = model.pickBestConnection(chosenPath);
+
                     int i = bestConnection.get(0);
                     int j = bestConnection.get(1);
                     connectionColorCode = model.getPathColorCode(model.getIndexByIAndJ(i, j));
@@ -160,20 +165,14 @@ public class Presenter implements IPresenter {
                     }
                     if (model.board[i][j].getNumOfRoads() == 2) {
                         int index = model.getIndexByIAndJ(i, j, model.get2PathColor(i, j));
-                        //CONTINUE FROM HERE
-                        //pass the correct index to the path clicked somehow
-                        // pathClicked(model.getIndexByIAndJ(i, j, model.get2PathColor(i,j)));
+                        pathClicked(index);
                         }
                     else
                         pathClicked(model.getIndexByIAndJ(i, j));
 
                     moveMade = "The Bot has claimed a path";
                     iview.updateWagonsLeft();
-                    if(getModel().lastTurn) {
-                        getModel().lastTurnCounter--;
-                        if (model.lastTurnCounter == 0)
-                            iview.showEndingScreen();
-                    }
+                    iview.checkIfEnd();
 
                 }
 
@@ -244,6 +243,18 @@ public class Presenter implements IPresenter {
 
 
         insertRouteQueue(optionalRoutes);   //insert the rest of the destination cards back to the stack
+
+
+        //theres a possibility that the bot ill pick a Route card that is already completed
+        Iterator<Route> iterator = model.getPlayer().getRouteList().iterator();
+        while (iterator.hasNext()) {
+            Route route = iterator.next();
+            if (model.isRouteCompleted(route)) {
+                model.getPlayer().incPoints(route.getPoints());
+                iterator.remove();
+            }
+        }
+
     }
 
     private List<List<Integer>> getOccupyableConnections(List<List<Integer>> chosenPath) {
@@ -392,7 +403,6 @@ public class Presenter implements IPresenter {
         model.usedWagonStack.push(index);
     }
 
-
     public void pickCards(int connectionColorCode, int[] optionalOpenCards) { //need to continue, updating the cardPanes NNED TO CHECK IF THE PICKS THAT ARE MADE CHANGE THE MAIN OPTIONAL CARDS AS WELL
         int chosenCards = 0;
         int i = 0;
@@ -495,8 +505,15 @@ public class Presenter implements IPresenter {
         iview.setOptionalWagonCards(optionalOpenCards);
 
     }
+
+    public void hasCompletedDestinationCards() {
+        Iterator<Route> iterator = model.getPlayer().getRouteList().iterator();
+        while (iterator.hasNext()) {
+            Route route = iterator.next();
+            if (model.isRouteCompleted(route)) {
+                model.getPlayer().incPoints(route.getPoints());
+                iterator.remove();
+            }
+        }
+    }
 }
-
-
-
-

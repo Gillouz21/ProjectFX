@@ -18,5 +18,6 @@ public interface IView {
     void showEndingScreen();
     void showLastTurn();
     void updateWagonsLeft();
+    void checkIfEnd();
 
 }

@@ -23,6 +23,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Main extends Application implements IView {
@@ -242,17 +243,13 @@ public class Main extends Application implements IView {
                         hideRouteCards(routeCardPanes);
                         isDeckClicked = false;
 
-                        if(presenter.getModel().lastTurn) {
-                            presenter.getModel().lastTurnCounter--;
-                            if (presenter.getModel().lastTurnCounter == 0)
-                                showEndingScreen();
-                        }
+                        presenter.hasCompletedDestinationCards();
+                        updatePlayersListView();
+                        updatePointLabels();
 
-                        if(presenter.getModel().lastTurn) {
-                            presenter.getModel().lastTurnCounter--;
-                            if (presenter.getModel().lastTurnCounter == 0)
-                                showEndingScreen();
-                        }
+                        checkIfEnd();
+
+
                         presenter.getModel().nextPlayer();
                         presenter.botMove();
 
@@ -266,11 +263,7 @@ public class Main extends Application implements IView {
 
                         if (firstChoice) {
 
-                            if(presenter.getModel().lastTurn) {
-                                presenter.getModel().lastTurnCounter--;
-                                if (presenter.getModel().lastTurnCounter == 0)
-                                    showEndingScreen();
-                            }
+                            checkIfEnd();
 
                             presenter.getModel().nextPlayer();
                             presenter.botMove();
@@ -294,11 +287,7 @@ public class Main extends Application implements IView {
                                   updatePossibleWagon(paneIndex, presenter.getWagonCard());
 
 
-                              if(presenter.getModel().lastTurn) {
-                                  presenter.getModel().lastTurnCounter--;
-                                  if (presenter.getModel().lastTurnCounter == 0 )
-                                      showEndingScreen();
-                              }
+                              checkIfEnd();
 
                               presenter.getModel().nextPlayer();
                               presenter.botMove();
@@ -316,11 +305,7 @@ public class Main extends Application implements IView {
                             else
                                 updatePossibleWagon(paneIndex, presenter.getWagonCard());
                             if (firstChoice) {
-                                if(presenter.getModel().lastTurn) {
-                                    presenter.getModel().lastTurnCounter--;
-                                    if (presenter.getModel().lastTurnCounter == 0)
-                                        showEndingScreen();
-                                }
+                                checkIfEnd();
                                 presenter.getModel().nextPlayer();
                                 presenter.botMove();
 
@@ -352,11 +337,7 @@ public class Main extends Application implements IView {
                             updateWagonsLeft();
 
 
-                            if(presenter.getModel().lastTurn) {
-                                presenter.getModel().lastTurnCounter--;
-                                if (presenter.getModel().lastTurnCounter == 0)
-                                    showEndingScreen();
-                            }
+                            checkIfEnd();
 
                             presenter.getModel().nextPlayer();
                             presenter.botMove();
@@ -485,7 +466,7 @@ public class Main extends Application implements IView {
         });
 
         root.getChildren().addAll(messageText, closeButton);
-        Scene scene = new Scene(root, 400, 300);
+        Scene scene = new Scene(root, 600, 500);
         endingStage.setScene(scene);
         endingStage.show();
 
@@ -503,4 +484,18 @@ public class Main extends Application implements IView {
         }
     }
 
+
+    public void checkIfEnd(){
+        if(presenter.getModel().lastTurn) {
+            presenter.getModel().lastTurnCounter--;
+            if (presenter.getModel().lastTurnCounter == 0) {
+                List<Integer> longestPath = presenter.getModel().findLongestPath();
+                for (Integer i: longestPath
+                     ) {
+                    presenter.getModel().getPLAYER_ARR()[i].incPoints(10); //increase player points for the lonest path;
+                }
+                showEndingScreen();
+            }
+        }
+    }
 }
