@@ -8,13 +8,12 @@ public class Presenter implements IPresenter {
     private IView iview;
     private Model model;
 
-
     public Presenter(IView iview){
         this.iview = iview;
         this.model = new Model();
-
     }
 
+    //if the route deck clicked, get route cards and return them
     @Override
     public ArrayList<Route> routeDeckClicked() {
         ArrayList<Route> r = model.getRouteCards();
@@ -22,80 +21,75 @@ public class Presenter implements IPresenter {
         return r;
     }
 
-    //FIRST OPTION OF USER TURN
+    //path clicked on the board / bot picked a path
     public String pathClicked(int index){
         String str= "";
         model.occupyPath(model.getPlayer().getPlayerID(), index); //occupies the path and add points to the player
         iview.changeColor(index, model.getPlayerColor(model.getPlayer().getPlayerID()));
 
+        //iterate over the route cards and check what route cards have been completed
         Iterator<Route> iterator = model.getPlayer().getRouteList().iterator();
         while (iterator.hasNext()) {
             Route route = iterator.next();
             if (model.isRouteCompleted(route)) {
-                if(model.getPlayer().getPlayerID() == 1)
-                    str = str + String.format("The Bot has completed a path between %s and %s\n", model.cityMap.get(route.getCities()[0]), model.cityMap.get(route.getCities()[1]) );
+                if(model.getPlayer().getPlayerID() == 1) //if bot's turn, promp what route cards has he has completed
+                    str = str + String.format("The Bot has completed a path between %s and %s\n", getCityName(route.getCities()[0]), getCityName(route.getCities()[1]) );
                 model.getPlayer().incPoints(route.getPoints());
                 iterator.remove();
             }
         }
 
-
+        //if is last turns
         if (model.isLastTurn(model.getPlayer().getPlayerID())) {
             iview.showLastTurn();
             model.setLastTurnCounter();
         }
-
-
         return str;
-
     }
 
+    //passing the panes to the model for initializing purposes
     public void passPanes(ArrayList<Pane> panes){
         model.initPossibleConnections(panes);
-
     }
 
     public Model getModel() {
         return this.model;
     }
 
+    //getting citiy name by code
     public String getCityName(int cityNum){
         return model.getCityName(cityNum);
     }
 
+    //inserting route card to the route card list of the current player
     @Override
     public void insertRouteToPlayerRouteList(Route r) {
         model.insertRouteToPlayer(r);
     }
 
+    //inserting the unpicked route cards to the route cards queue
     @Override
     public void insertRouteQueue(ArrayList<Route> optionalRouteCards) {
         model.insertQueue(optionalRouteCards);
     }
 
+    //getting a wagon card
     @Override
     public int getWagonCard() {
         return model.wagonStack.pop();
     }
 
+    //adding wagon card to a player
     @Override
     public void addWagonCard(int index) {
         model.getPlayer().AddCard(index);
     }
-//FOR TESTING
-//    public void botMove(){
-//        Route r1  =new Route(0,6, 12);
-//        ArrayList<Route> optionalRoutes = new ArrayList<>();
-//        optionalRoutes.add(r1);
-//        List<List<Integer>> chosenPath = bestPath(optionalRoutes);
-//        model.nextPlayer();
-//    }
-//
 
+    //making the bots move, will pick one of 3 options: picking route cards, picking wagon cards or claiming path
     @Override
     public void botMove() {
         String moveMade = "";
-        if (model.getPlayer().getRouteList().isEmpty() && !model.lastTurn) // if the bot doesn't have destination cards
+        if (model.getPlayer().getRouteList().isEmpty() && !model.lastTurn) // if the bot doesn't have destination cards and not in his last turn
         {
             pickDestinationCards();
             moveMade = "The Bot has picked Destination Cards";
@@ -103,9 +97,9 @@ public class Presenter implements IPresenter {
         else {
             //pick best Route
             boolean pickedDestinationCard = false;
-            List<List<Integer>> chosenPath = bestPath(model.getPlayer().getRouteList()); //could be null
+            List<List<Integer>> chosenPath = bestPath(model.getPlayer().getRouteList()); //picking the best path for completing as many route cards as possible with a fair tradeoff of wagons used
             List<List<Integer>> possibleConnections = null;
-            if (chosenPath == null){
+            if (chosenPath == null){ //if cannot complete any route card pick cards or try to complete more paths to get more points
                 if(!model.isEndGame() ){
                     pickDestinationCards();
                     pickedDestinationCard = true;
@@ -122,10 +116,12 @@ public class Presenter implements IPresenter {
 
             }
 
-            if(!pickedDestinationCard) {
+            if(!pickedDestinationCard) { //if didn't pick route cards
                 int connectionColorCode;
                 if (possibleConnections.size() == 0) {
                     List<Integer> bestConnection;
+
+                    //pick the best path to claim
                     if (chosenPath == null)
                         bestConnection = model.pickBestConnection(possibleConnections);
                     else
@@ -137,16 +133,16 @@ public class Presenter implements IPresenter {
 
 
                     int[] optionalOpenCards = iview.getOptionalWagonCards();
-                    pickCards(connectionColorCode, optionalOpenCards);       // can be improved by considering multiple connections of different colors
+                    pickCards(connectionColorCode, optionalOpenCards);       //pick cards that will help claiming the path
 
                     //checks if needs shuffle
                     if (model.wagonStack.isEmpty() && model.cannotCompleteTurn(iview.getOptionalWagonCards())) {
                         model.insertUsedToWagonStack();
                         iview.initOptionalWagonCards();
                     }
-
                     moveMade = "The Bot has Picked Wagon Cards";
-                } else {
+
+                } else {//if there are possible paths to claim, claim the best one
                     List<Integer> bestConnection = model.pickBestConnection(possibleConnections);
                     int i = bestConnection.get(0);
                     int j = bestConnection.get(1);
@@ -186,10 +182,10 @@ public class Presenter implements IPresenter {
 
     }
 
-    private void pickDestinationCards() { // ERRORS
-        // pick destination cards
-        ArrayList<Route> optionalRoutes = model.getRouteCards();
-        List<List<Integer>> chosenPath = bestPath(optionalRoutes);
+    // pick destination cards
+    private void pickDestinationCards() {
+        ArrayList<Route> optionalRoutes = model.getRouteCards();// getting 3 optional route cards
+        List<List<Integer>> chosenPath = bestPath(optionalRoutes); //pick the best set of connections
 
         if (chosenPath == null){ //if cannot complete any route pick the one with the minimum points;
             Route minRoute = null;
@@ -220,7 +216,7 @@ public class Presenter implements IPresenter {
             }
         }
 
-        if (model.firstTurn) {
+        if (model.firstTurn) { //if is the first turn mae sure that the bot picks at least 2 cards
             while (model.getPlayer().getRouteList().size() < 2) {
                 Route minRoute = null;
                 int minPoints = Integer.MAX_VALUE;
@@ -240,8 +236,6 @@ public class Presenter implements IPresenter {
             }
             model.firstTurn = false;
         }
-
-
         insertRouteQueue(optionalRoutes);   //insert the rest of the destination cards back to the stack
 
 
@@ -257,6 +251,7 @@ public class Presenter implements IPresenter {
 
     }
 
+    //returning a set of connections the player is able to claim
     private List<List<Integer>> getOccupyableConnections(List<List<Integer>> chosenPath) {
         List<List<Integer>> possibleConnections = new ArrayList<>();
         for (List<Integer> connection:
@@ -272,6 +267,7 @@ public class Presenter implements IPresenter {
         return possibleConnections;
     }
 
+    //getting a list of vertices out of a set of connections {(1, 2), (2, 3)} ---> {1, 2, 3}
     private List<Integer> pathToListOfVertices(List<List<Integer>> chosenPath) {
         List<Integer> vertices = new ArrayList<>();
         for (List<Integer> connection: chosenPath
@@ -285,21 +281,22 @@ public class Presenter implements IPresenter {
         return vertices;
     }
 
+    //picking the best path for completing as many route cards as possible
     private List<List<Integer>> bestPath(ArrayList<Route> routeList) {
-        List<List<Route>> routesSet = getAllRouteCombinations(routeList);
-        Map<List<Route>, Map<List<List<Integer>>, Integer>> routeCombos2Paths = new HashMap<>();
-        Map<List<List<Integer>>, Float> pathsScores = new HashMap<>();
+        List<List<Route>> routesSet = getAllRouteCombinations(routeList);   //getting every combination of route cards {A,B} --> {(A), (B), (A, B), (B, A)}
+        Map<List<Route>, Map<List<List<Integer>>, Integer>> routeCombos2Paths = new HashMap<>();   //creating a map that will store every combination as key and the shortest paths for completing the set as value
+        Map<List<List<Integer>>, Float> pathsScores = new HashMap<>();    //creating a map that will store every path and its corresponding score calculated by the calculateScore  function in model
         List<List<Integer>> chosenPath;
 
         //get every path for every combo
         for (List<Route> set: routesSet
         ) {
-            routeCombos2Paths.put(set, model.pickRoutes((ArrayList<Route>) set, model.getPlayer().getNumOfWagons())); //THERES AN ERROR HERE
-            if (routeCombos2Paths.get(set).size() == 0)
+            routeCombos2Paths.put(set, model.pickRoutes((ArrayList<Route>) set, model.getPlayer().getNumOfWagons())); //insert the paths picked for every combo
+            if (routeCombos2Paths.get(set).size() == 0) //if couldn't find path than delete the combination
                 routeCombos2Paths.remove(set);
         }
 
-
+        //calculate the score for every path
         for (List<Route> set : routeCombos2Paths.keySet()) {
             int cardsCompleted = set.size();        //how many cards is this path completing?
             int cardsValue = getRoutesValue(set);       //how many points is this path worth?
@@ -313,14 +310,17 @@ public class Presenter implements IPresenter {
                 pathWeight = paths.get(path);
                 pathConnections = path.size();
 
-                pathsScores.put(path, model.calculateScore(cardsCompleted,cardsValue,pathWeight, pathConnections));
+                pathsScores.put(path, model.calculateScore(cardsCompleted,cardsValue,pathWeight, pathConnections)); //insert the paths and scores
             }
         }
+
+        //if couldn't find any path than return null;
         if (pathsScores.size() == 0)
             return null;
-        return Collections.max(pathsScores.entrySet(),Map.Entry.comparingByValue()).getKey(); // pick the path with the max score
+        return Collections.max(pathsScores.entrySet(),Map.Entry.comparingByValue()).getKey(); // return the path with the max score
     }
 
+    //getting the value of all of the route cards in the set
     private int getRoutesValue(List<Route> set) {
         int sum = 0;
         for (Route r: set
@@ -330,15 +330,7 @@ public class Presenter implements IPresenter {
         return sum;
     }
 
-    private List<Integer> getNumOfRoutesCompletable(List<List<Route>> routesSet) {
-        List<Integer> numOfRoutesCompleted = new ArrayList<>();
-        for (List<Route> set: routesSet
-        ) {
-            numOfRoutesCompleted.add(set.size());
-        }
-        return numOfRoutesCompleted;
-    }
-
+    //getting every combination of route cards {A,B} --> {(A), (B), (A, B), (B, A)}
     public static List<List<Route>> getAllRouteCombinations(List<Route> routes) {
         List<List<Route>> result = new ArrayList<>();
         List<List<Route>> finalResult = new ArrayList<>();
@@ -373,6 +365,7 @@ public class Presenter implements IPresenter {
         return finalResult;
     }
 
+    // an helper function for 'getAllRouteCombinations' that gets for every unique set every set in different order (A,B) --> {(A, B), (B, A)}
     private static List<List<Route>> getAllSetCombinations(List<Route> set) {
         if(set.size() == 1){
             List<List<Route>> routeSet = new ArrayList<>(Collections.singletonList(set));
@@ -384,7 +377,7 @@ public class Presenter implements IPresenter {
             Route current = set.get(i);
             List<Route> remaining = new ArrayList<>();
             remaining.addAll(set.subList(0, i));
-            remaining.addAll(set.subList(i+1, set.size())); // check if works
+            remaining.addAll(set.subList(i+1, set.size()));
 
             List<List<Route>> sub_combination = getAllSetCombinations(remaining);
             for (List<Route> set_combo : sub_combination
@@ -398,12 +391,14 @@ public class Presenter implements IPresenter {
         return routeSet;
     }
 
+    // use wagon cards that some player holds
     public void useWagonCard(int index) {
         model.getPlayer().removeCard(index);
         model.usedWagonStack.push(index);
     }
 
-    public void pickCards(int connectionColorCode, int[] optionalOpenCards) { //need to continue, updating the cardPanes NNED TO CHECK IF THE PICKS THAT ARE MADE CHANGE THE MAIN OPTIONAL CARDS AS WELL
+    //picking cards that will help to claim the chosen connection
+    public void pickCards(int connectionColorCode, int[] optionalOpenCards) {
         int chosenCards = 0;
         int i = 0;
 
@@ -412,9 +407,9 @@ public class Presenter implements IPresenter {
                 if (optionalOpenCards[j] == 8){
                     addWagonCard(8);
                     if (!model.wagonStack.isEmpty())
-                        iview.updatePossibleWagon(j, getWagonCard());
+                        iview.updateOptionalWagon(j, getWagonCard());
                     else {
-                        iview.removePossibleWagon(j);
+                        iview.removeOptionalWagon(j);
                         optionalOpenCards[j] = -1;
                     }
                     return;
@@ -423,14 +418,14 @@ public class Presenter implements IPresenter {
         }
 
 
-
+        //if there are cards of the color we want pick them
         while(i < 5 && chosenCards < 2 ) {
             if (optionalOpenCards[i] == connectionColorCode && chosenCards < 2){
                 addWagonCard(optionalOpenCards[i]);
                 if (!model.wagonStack.isEmpty())
-                    iview.updatePossibleWagon(i, getWagonCard());
+                    iview.updateOptionalWagon(i, getWagonCard());
                 else {
-                    iview.removePossibleWagon(i);
+                    iview.removeOptionalWagon(i);
                     optionalOpenCards[i] = -1;
                 }
                 chosenCards++;
@@ -439,6 +434,7 @@ public class Presenter implements IPresenter {
             i++;
         }
 
+        //if founs only one in that color, pick one from the deck or, if empty, other random card
         if (chosenCards == 1){
             if (!model.wagonStack.isEmpty()) {
                 addWagonCard(getWagonCard());
@@ -448,7 +444,7 @@ public class Presenter implements IPresenter {
                 for (int j = 0; j < 5 ; j++) {
                     if (optionalOpenCards[j] != 8 && optionalOpenCards[j] != -1 && chosenCards< 2) {
                         addWagonCard(optionalOpenCards[j]);
-                        iview.removePossibleWagon(j);
+                        iview.removeOptionalWagon(j);
                         optionalOpenCards[j] = -1;
                         chosenCards++;
                     }
@@ -456,43 +452,46 @@ public class Presenter implements IPresenter {
             }
         }
 
+        // if didn't find one of the chosen color, pick joker
         if (chosenCards == 0){
             for (int j = 0; j < 5 ; j++) {
                 if (optionalOpenCards[j] == 8 && chosenCards < 2) {
                     addWagonCard(optionalOpenCards[j]);
                     if (!model.wagonStack.isEmpty())
-                        iview.updatePossibleWagon(j, getWagonCard());
+                        iview.updateOptionalWagon(j, getWagonCard());
                     else {
-                        iview.removePossibleWagon(j);
+                        iview.removeOptionalWagon(j);
                         optionalOpenCards[j] = -1;
                     }
                     chosenCards +=2;
                 }
             }
 
-
+            //if there is no joker try to draw 2 from the deck
             while (!model.wagonStack.isEmpty() && chosenCards < 2) {
                 addWagonCard(getWagonCard());
                 chosenCards++;
             }
 
+            //if the deck is empty and already picked one
             if(chosenCards == 1){
                 for (int j = 0; j < 5 ; j++) {
                     if ( optionalOpenCards[j] != -1 && chosenCards < 2) {
                         addWagonCard(optionalOpenCards[j]);
-                        iview.removePossibleWagon(j);
+                        iview.removeOptionalWagon(j);
                         optionalOpenCards[j] = -1;
                         chosenCards++;
                     }
                 }
             }
 
+            //if there was no other option pick two random cards from the open ones
             else if (chosenCards == 0){
                 i = 0;
                 while(i < 5 && chosenCards < 2 ) {
                     if (optionalOpenCards[i] != -1 && chosenCards < 2) {
                         addWagonCard(optionalOpenCards[i]);
-                        iview.removePossibleWagon(i);
+                        iview.removeOptionalWagon(i);
                         optionalOpenCards[i] = -1;
                         chosenCards++;
                         i--;
@@ -502,10 +501,11 @@ public class Presenter implements IPresenter {
             }
         }
 
+        //update the optional open cards
         iview.setOptionalWagonCards(optionalOpenCards);
-
     }
 
+    //has the player completed any destination/route cards
     public void hasCompletedDestinationCards() {
         Iterator<Route> iterator = model.getPlayer().getRouteList().iterator();
         while (iterator.hasNext()) {

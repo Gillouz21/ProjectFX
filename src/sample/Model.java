@@ -10,31 +10,28 @@ import java.util.Comparator;
 import java.util.*;
 
 public class Model {
-    final int NUM_OF_WAGONS = 35;
-    final int NUM_OF_ROUTES = 26;
-    final int NUM_OF_CITIES = 16;
-    final int NUM_OF_PLAYERS = 2;
+    final int NUM_OF_WAGONS = 35;                                                         //number of wagons available for each player
+    final int NUM_OF_CITIES = 16;                                                         //number of cities (verticies in the graph)
+    final int NUM_OF_PLAYERS = 2;                                                         //number of players playing the game
 
-    private Player[] PLAYER_ARR = new Player[NUM_OF_PLAYERS];
-    private int currentPlayer = 0;
-    protected Connection[][] board= new Connection[NUM_OF_CITIES][NUM_OF_CITIES];
-    Stack<Integer> wagonStack = new Stack<>();
-    Stack<Integer> usedWagonStack = new Stack<>();
-    Queue<Route> routeQueue= new LinkedList<>() ;
-    Map<Integer, Integer[]> routeMap = new HashMap<>();
-    Map< Integer, String> cityMap = new HashMap<>();
-    Map< Integer, Integer> wagonsToPoints = new HashMap<>();
-    Map< Integer, Integer> doubledPaths = new HashMap<>();
-    Map< Integer, Color> pathsIndexToColor = new HashMap<>();
-    Map<Color, Integer> colorsAndNumbers = new HashMap<Color, Integer>(); //{WHITE, BLUE, YELLOW, PURPLE, ORANGE, BLACK, RED, GREEN, JOKER}
-    Color[] playersColors = {Color.BLUE, Color.WHITE};
-    List<Integer> botsCityList = new ArrayList<>();
-    int lastTurnCounter = NUM_OF_PLAYERS + 1; //because activated right after the players turn (and he needs to play another turn himself as well)
-    boolean lastTurn = false;
-    boolean firstTurn = true;
-    List<Integer> criticalCities = new ArrayList<>();
-
-
+    private Player[] PLAYER_ARR = new Player[NUM_OF_PLAYERS];                             //creating an array of player
+    private int currentPlayer = 0;                                                        //current player, the user is playing first
+    protected Connection[][] board= new Connection[NUM_OF_CITIES][NUM_OF_CITIES];         //creating the graph using adjacency matrix made of Connection type
+    Stack<Integer> wagonStack = new Stack<>();                                            //creating the wagon cards deck
+    Stack<Integer> usedWagonStack = new Stack<>();                                        //creating the used wagon cards deck
+    Queue<Route> routeQueue= new LinkedList<>() ;                                         //creating the route cards deck
+    Map<Integer, Integer[]> routeMap = new HashMap<>();                                   //maps route number to i,j in board graph
+    Map< Integer, String> cityMap = new HashMap<>();                                      //maps vertex number to the city's name
+    Map< Integer, Integer> wagonsToPoints = new HashMap<>();                              //maps the route length to it's points value
+    Map< Integer, Integer> doubledPaths = new HashMap<>();                                //map for the doubled paths, holds route number and it's corresponding index in the Connection
+    Map< Integer, Color> pathsIndexToColor = new HashMap<>();                             //maps the paths index to their color
+    Map<Color, Integer> colorsAndNumbers = new HashMap<Color, Integer>();                 //maps the color code to its color: {WHITE, BLUE, YELLOW, PURPLE, ORANGE, BLACK, RED, GREEN, JOKER}
+    Color[] playersColors = {Color.BLUE, Color.WHITE};                                    //players' colors
+    List<Integer> botsCityList = new ArrayList<>();                                       //list of the cities the bot has connected
+    int lastTurnCounter = NUM_OF_PLAYERS + 1;                                             //activated right after the players turn (and he needs to play another turn himself as well)
+    boolean lastTurn = false;                                                             //boolean flag for ending the game
+    boolean firstTurn = true;                                                             //boolean flag for the first turn
+    List<Integer> criticalCities = new ArrayList<>();                                     //cities with 2 or less connections to other cities
 
 
     public Model() {
@@ -66,8 +63,6 @@ public class Model {
 
         //initializing doubledPaths that maps which path fits the right index in the Connection
         initDoubledPaths();
-
-
     }
 
     public void initWagonStack() {
@@ -89,7 +84,6 @@ public class Model {
 
     public void initRouteQueue(){
         List<Route> values = new ArrayList<>();
-
         values.add(new Route(13,15, 12));
         values.add(new Route(1,5, 8));
         values.add(new Route(2,12, 17));
@@ -101,10 +95,6 @@ public class Model {
         values.add(new Route(3,14, 15));
         values.add(new Route(12,15, 6));
         values.add(new Route(7,10, 13));
-
-
-
-
         values.add(new Route(9,12, 6));
         values.add(new Route(0,11, 18));
         values.add(new Route(2,8, 12));
@@ -114,7 +104,6 @@ public class Model {
         // Push the shuffled values into the Queue
         for (Route value : values)
             routeQueue.add(value);
-
     }
 
     public void initWagonsToPoints(){
@@ -144,7 +133,6 @@ public class Model {
 
     public void initRouteMap(){
         //routeIndex --> i,j of connection routeMap
-
         routeMap.put(0, new Integer[] {9,10});
         routeMap.put(1, new Integer[] {12,13});
         routeMap.put(2, new Integer[] {11,12});
@@ -171,13 +159,11 @@ public class Model {
         routeMap.put(23, new Integer[] {2,4});
         routeMap.put(24, new Integer[] {10,12});
         routeMap.put(25, new Integer[] {11,12});
-
     }
 
     public void initCityMap(){
-
         cityMap.put(0, "Portland");
-        cityMap.put(1, "Hellena");
+        cityMap.put(1, "Helena");
         cityMap.put(2, "San Francisco");
         cityMap.put(3, "Salt Lake");
         cityMap.put(4, "Los Angeles");
@@ -201,7 +187,7 @@ public class Model {
                 if (board[i][j] != null)
                     counter++;
             }
-            if (counter <= 2){
+            if (counter <= 2){              //if has 2 or less connections
                 criticalCities.add(i);
             }
         }
@@ -210,7 +196,6 @@ public class Model {
     //inset to connection board the data
     public void initPossibleConnections(ArrayList<Pane> panes){
         int i =0;
-
         for (Integer[] array : routeMap.values()){
 
             // Get the first Rectangle from the Pane (assuming there is at least one)
@@ -232,9 +217,7 @@ public class Model {
                 board[array[0]][array[1]] = new Connection(board[array[0]][array[1]].getWeight(), 2);
             }
             board[array[0]][array[1]].setColor(temp);
-
             board[array[1]][array[0]] = board[array[0]][array[1]]; //for symmetrical purposes
-
 
             int index = Integer.valueOf(panes.get(i).getId().split("e")[1]);
             pathsIndexToColor.put(index,fillColor);
@@ -245,22 +228,27 @@ public class Model {
         initCriticalCities();
     }
 
+    //returning the current player
     public Player getPlayer() {
         return PLAYER_ARR[currentPlayer];
     }
 
+    //returning the players color
     public Color getPlayerColor(int player){
         return playersColors[player];
     }
 
+    //returns if last turn for each player or not
     public boolean isLastTurn(int player) {
         return (this.PLAYER_ARR[player].getNumOfWagons() <= 2 );
     }
 
+    //passing the turn to the next player
     public void nextPlayer() {
         this.currentPlayer = (this.currentPlayer + 1) % NUM_OF_PLAYERS;
     }
 
+    //returning 3 route cards
     public ArrayList<Route> getRouteCards() {
         int i = 0;
         ArrayList<Route> r = new ArrayList<Route>();
@@ -268,14 +256,15 @@ public class Model {
             r.add(routeQueue.remove());
             i++;
         }
-
         return r;
     }
 
+    //returning city name by cityNum
     public String getCityName(int cityNum) {
         return cityMap.get(cityNum);
     }
 
+    //inserting the unpicked route cards back to the deck
     public void insertQueue(ArrayList<Route> optionalRouteCards) {
         while(!optionalRouteCards.isEmpty()) {
             Route r = optionalRouteCards.remove(0);
@@ -284,16 +273,19 @@ public class Model {
         }
     }
 
+    //inserting new route card to players' route list
     public void insertRouteToPlayer(Route r) {
         Player currentPlayer = getPlayer();
         currentPlayer.AddRouteList(r);
 
     }
 
+    //returning the player_arr
     public Player[] getPLAYER_ARR() {
         return PLAYER_ARR;
     }
 
+    //returns true if the current player can occupy the path (checks if he has enough cards and wagons)
     public boolean canOccupyPath(int index) {
         int i = routeMap.get(index)[0];
         int j = routeMap.get(index)[1];
@@ -307,12 +299,11 @@ public class Model {
         else{
             c = board[i][j].getColor()[0];
         }
-
         sum = PLAYER_ARR[currentPlayer].getCards()[colorsAndNumbers.get(c)] + PLAYER_ARR[currentPlayer].getCards()[8] ;
-
         return sum >= w && PLAYER_ARR[currentPlayer].getNumOfWagons() >= w;
     }
 
+    //occupying the path, increasing points and decreasing num of wagons
     public void occupyPath(int player, int index) {
         int i  = this.routeMap.get(index)[0];
         int j  = this.routeMap.get(index)[1];
@@ -326,6 +317,7 @@ public class Model {
         PLAYER_ARR[player].decreaseNumOfWagons(board[i][j].getWeight());
     }
 
+    //checking if a route card was completed
     public boolean isRouteCompleted(Route route){ //DFS
         int source = route.getCities()[0], destination = route.getCities()[1] ;
         boolean[] visited = new boolean[NUM_OF_CITIES];
@@ -333,14 +325,16 @@ public class Model {
 
     }
 
+    //Depth First Search, used for checking if there is aconnection between source and destination
     private boolean dfs(boolean[] visited, int source, int destination) {
-
         visited[source] = true;
 
+        //if got to the destination return true
         if(source == destination) {
             return true;
         }
 
+        //else, recursively check for every neighbour vertex
         for(int i = 0; i < NUM_OF_CITIES; i++) {
             if(isConnectionExists( source,  i,  currentPlayer)  && !visited[i]) {
                 boolean isConnected = dfs(visited, i, destination);
@@ -353,6 +347,7 @@ public class Model {
         return false;
     }
 
+    //get the path color code by its index in the gui
     public int getPathColorCode(int index) {
         int i = routeMap.get(index)[0];
         int j = routeMap.get(index)[1];
@@ -364,12 +359,14 @@ public class Model {
         return colorsAndNumbers.get(c);
     }
 
+    //returns path weight
     public int getPathWeight(int index) {
         int i = routeMap.get(index)[0];
         int j = routeMap.get(index)[1];
         return board[i][j].getWeight();
     }
 
+    // inserting the used wagons back to the wagon stack
     public void insertUsedToWagonStack() {
         Collections.shuffle(usedWagonStack);
         while(!usedWagonStack.isEmpty()){
@@ -377,6 +374,7 @@ public class Model {
         }
     }
 
+    //returns true if there is a players connection between i and j vertices
     public boolean isConnectionExists(int i, int j, int playerID){
         if(board[i][j] != null){
             if(board[i][j].getNumOfRoads() == 2)
@@ -387,6 +385,7 @@ public class Model {
         return false;
     }
 
+    //returns true if there is another players connection between i and j vertices
     public boolean isTaken(int i, int j, int playerID) {
         if(board[i][j] != null && board[i][j].isComplete()){
             if(board[i][j].getNumOfRoads() == 2)
@@ -397,6 +396,7 @@ public class Model {
         return false;
     }
 
+    //function that returns all of the possible shortest paths between two vertices on the graph
     public List<List<List<Integer>>> getAllShortestPaths(int source, int dest, int playerID, List<List<Integer>> explored)
     {
             int n = NUM_OF_CITIES;
@@ -408,7 +408,8 @@ public class Model {
                 dist[i] = Integer.MAX_VALUE;
             }
             dist[source] = 0;
-            pq.offer(new int[] {source, 0});
+
+            pq.offer(new int[] {source, 0});// inserting the first vertex (source) and its distance from the source (0)
             while (!pq.isEmpty()) {
                 int[] curr = pq.poll();
                 int u = curr[0];
@@ -418,16 +419,16 @@ public class Model {
                     buildPaths(paths, path, source, dest, dist, playerID, explored, new HashSet<Integer>());
                     return paths;
                 }
-                if (visited[u]) {
+                if (visited[u]) { //if visited, no need to check
                     continue;
                 }
                 visited[u] = true;
 
                 for (int v = 0; v < n; v++) {
                     if (board[u][v] != null) {
-                        int alt = dist[u] + board[u][v].getWeight();
+                        int alt = dist[u] + board[u][v].getWeight(); //calculating the distance from the source
 
-                        //check if the route is taken by someone else
+                        //check if the route is taken by someone else, if so than not possible to get from there
                         if(isTaken(u,v,playerID)) {
                             alt = Integer.MAX_VALUE;
                         }
@@ -437,11 +438,9 @@ public class Model {
                             alt = dist[u] + 0;
                         }
 
-
-
                         if (alt < dist[v]) {
                             dist[v] = alt;
-                            pq.offer(new int[] {v, alt});
+                            pq.offer(new int[] {v, alt}); //insert the next vertex
                         }
                     }
                 }
@@ -449,6 +448,7 @@ public class Model {
             return paths; // No paths found
     }
 
+    //helper function for building paths and returning them back to getAllShortestPaths function
     public void buildPaths( List<List<List<Integer>>> paths, List<Integer> path, int u, int dest, int[] dist, int playerID, List<List<Integer>> explored, Set<Integer> visited) {
         path.add(u);
         visited.add(u);
@@ -460,11 +460,10 @@ public class Model {
                 if (board[u][v] != null) {
                     int x = dist[u] + board[u][v].getWeight();
 
-
+                    //check if the route is taken by someone else, if so than not possible to get from there
                     if(isTaken(u,v,playerID)) {
                         x = Integer.MAX_VALUE;
                     }
-
 
                     // Check if a connection already exists between u and v
                     if( isConnectionExists( u,  v, playerID) || (explored!= null && explored.contains(List.of(u, v)))) {
@@ -481,6 +480,7 @@ public class Model {
 
     }
 
+    //returns a list of connections i and j's out of a list of vertices
     public List<List<Integer>> verticesToEdges(List<Integer> path) {
         List<List<Integer>> explored = new ArrayList<>();
         for (int i = 0; i < path.size() - 1; i++) {
@@ -489,7 +489,8 @@ public class Model {
         return explored;
     }
 
-    boolean mergeable(List<List<Integer>> list1 , List<List<Integer>> list2) {
+    //returns true if there are common connections between the paths
+    public boolean mergeable(List<List<Integer>> list1 , List<List<Integer>> list2) {
         for (List<Integer> sublist1 : list1) {
             for (List<Integer> sublist2 : list2) {
                 if (sublist1.equals(sublist2)) {
@@ -500,6 +501,7 @@ public class Model {
         return false;
     }
 
+    //merge the paths into one list of connections
     public List<List<Integer>> mergePaths(List<List<Integer>> list1 , List<List<Integer>> list2) {
         List<List<Integer>> mergedPath = list1;
 
@@ -511,8 +513,11 @@ public class Model {
         return mergedPath;
     }
 
+    //a function to pick the shortes paths that connect every route card in the "routes" list
     public Map<List<List<Integer>>, Integer> pickRoutes(ArrayList<Route> routes, int numOfWagons){
         Queue<List<Integer>> routeCards = new LinkedList<>();
+
+        //getting the cities numbers out of thw route cards
         for (Route route: routes
         ) {
             int city1 = route.getCities()[0];
@@ -520,10 +525,10 @@ public class Model {
             routeCards.add(List.of(city1, city2));
         }
 
-
         List<List<List<Integer>>> paths;
         List<List<List<Integer>>> nextPaths;
 
+        //getting the first route card shortest path
         List<Integer> pair = routeCards.remove();
         paths = getAllShortestPaths(pair.get(0) ,pair.get(1), getPlayer().getPlayerID(), null);
 
@@ -532,8 +537,11 @@ public class Model {
             int tempSize = paths.size();
             for (int i = 0; i < tempSize; i++) {
                 List<List<Integer>> path = paths.get(i);
+
+                //getting the next shortest path while considering we already claimed the previous connections
                 nextPaths = getAllShortestPaths(pair.get(0) ,pair.get(1), getPlayer().getPlayerID(), path);
 
+                //checking if the paths are able to be merged
                 for (List<List<Integer>> nextPath: nextPaths
                 ) {
                     if (mergeable(nextPath, path)) {
@@ -541,14 +549,14 @@ public class Model {
                     }
                 }
             }
-            paths = paths.subList(tempSize, paths.size());
+            paths = paths.subList(tempSize, paths.size()); //leaving only the merged paths (if exist) and removing the first ones
         }
 
-        Map<List<List<Integer>>, Integer> weightedPaths = calculatePathsCost(paths, numOfWagons);
-
+        Map<List<List<Integer>>, Integer> weightedPaths = calculatePathsCost(paths, numOfWagons); //calculating every path weight
         return weightedPaths;
     }
 
+    //calculating the path cost and removing the ones with higer cost
     public Map<List<List<Integer>>, Integer> calculatePathsCost(List<List<List<Integer>>> paths, int numOfWagons) {
         int minWeight = Integer.MAX_VALUE;
         Map<List<List<Integer>>, Integer> weightedPaths = new HashMap<>();
@@ -559,21 +567,20 @@ public class Model {
             {
                 weightedPaths.put(path, weight);
                 if (weight < minWeight)
-                    minWeight = weight;
+                    minWeight = weight;  //finding the minimum path
             }
         }
 
         for (Map.Entry<List<List<Integer>>, Integer> entry : weightedPaths.entrySet()
         ) {
             if (entry.getValue() != minWeight ){
-                weightedPaths.remove(entry);
+                weightedPaths.remove(entry);  //removing every path that has a cost higher then the minimum
             }
         }
-
         return weightedPaths;
     }
 
-
+    //getting the path weight
     private int getRouteWeight(List<List<Integer>> path) {
         int sum = 0;
         for (List<Integer> connection: path
@@ -584,11 +591,13 @@ public class Model {
         return sum;
     }
 
+    //claculating the score for a path considering how many cards will it complete, cardsValue, pathWeight and number of different connections that needs to be places
     public float calculateScore(int cardsCompleted, int cardsValue, int pathWeight, int pathConnections) {
         return ((float) cardsCompleted * cardsValue) / ((float) pathConnections * pathWeight);
 
     }
 
+    //gets route gui index by i and j
     public Integer getIndexByIAndJ(int i, int j) { //
         for (Map.Entry<Integer, Integer[]> entry : routeMap.entrySet()) {
             Integer[] value = entry.getValue();
@@ -599,7 +608,8 @@ public class Model {
         return null;
     }
 
-    public Integer getIndexByIAndJ(int i, int j, Color c) { // for two roads; needs to fix in the whole code FIXXXXXX
+    //gets route gui index by i and j for the doubled paths
+    public Integer getIndexByIAndJ(int i, int j, Color c) {
         for (Map.Entry<Integer, Integer[]> entry : routeMap.entrySet()) {
             Integer[] value = entry.getValue();
             if ((value[0].equals(i) && value[1].equals(j)) || (value[0].equals(j) && value[1].equals(i))  ) {
@@ -610,19 +620,21 @@ public class Model {
         return null;
     }
 
+    //from the path, pick the best connection possible using scoring system
     public List<Integer> pickBestConnection(List<List<Integer>> chosenPath) {
         int score;
         int maxScore = -1;
         List<Integer> chosenConnection = null;
         for (List<Integer> connection : chosenPath
         ) {
-
-
                 int i = connection.get(0);
                 int j = connection.get(1);
+
             if(!isConnectionExists(i,j,currentPlayer)){
                 score = 0;
                 Connection c = board[i][j];
+
+                //bette score for shorter connections
                 if (c.getWeight() == 2)
                     score += 50;
                 else if (c.getWeight() == 3)
@@ -638,6 +650,7 @@ public class Model {
                 if (isNearOtherConnections(connection, 0))
                     score += 30;
 
+                //if the bot hasn't connected that city yet
                 if (!(botsCityList.contains(i) && botsCityList.contains(j)))
                     score += 50;
                 else if (!botsCityList.contains(i) || !botsCityList.contains(j))
@@ -656,7 +669,7 @@ public class Model {
         return chosenConnection;
     }
 
-
+    //returns true if is near other connections
     private boolean isNearOtherConnections(List<Integer> connection, int playerID) {
         int i = connection.get(0);
         int j = connection.get(1);
@@ -669,6 +682,7 @@ public class Model {
         return false;
     }
 
+    //returns true if the player or the bot aren't able to pick cards (one left for example)
     public boolean cannotCompleteTurn(int[] openCards){
         List<Integer> temp = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
@@ -690,6 +704,7 @@ public class Model {
         return false;
     }
 
+    //if the game is about to end
     public boolean isEndGame(){
         for (int i = 0; i <NUM_OF_PLAYERS; i++) {
             if(PLAYER_ARR[i].getPoints() > 80 || PLAYER_ARR[i].getNumOfWagons() < 8)
@@ -698,6 +713,7 @@ public class Model {
         return false;
     }
 
+    //returns every open connection that hasn't been claimed yet
     public List<List<Integer>> getAllFreeConnection() {
         List<List<Integer>> allFreeConnections = new ArrayList<>();
         for (int i = 0; i < NUM_OF_CITIES ; i++) {
@@ -710,13 +726,15 @@ public class Model {
         return allFreeConnections;
     }
 
+    //setting lastTurn flag as true
     public void setLastTurnCounter() {
         lastTurn = true;
     }
 
+    //calculates the final points and returns who won
     public String whoWon() {
-        int user = PLAYER_ARR[0].getPoints() - deductPointsByRoute(PLAYER_ARR[0].getRouteList());
-        int bot = PLAYER_ARR[1].getPoints() - deductPointsByRoute(PLAYER_ARR[1].getRouteList());
+        int user = PLAYER_ARR[0].getPoints() - decreasePointsByRoute(PLAYER_ARR[0].getRouteList());
+        int bot = PLAYER_ARR[1].getPoints() - decreasePointsByRoute(PLAYER_ARR[1].getRouteList());
         if (user > bot)
             return String.format("Game Over!\nYou won with %d points!", user);
         else if (user == bot)
@@ -725,8 +743,8 @@ public class Model {
             return String.format("Game Over!\nYou lost :(,the bot won with %d points!", bot);
     }
 
-
-    private int deductPointsByRoute(ArrayList<Route> routeList) {
+    //decreasing points for every route card a player has in hand at the end game
+    private int decreasePointsByRoute(ArrayList<Route> routeList) {
         int sum = 0;
         for (Route r: routeList
              ) {
@@ -735,6 +753,7 @@ public class Model {
         return sum;
     }
 
+    //returns the color of a doubled path
     public Color get2PathColor(int i, int j) {
         Connection temp = board[i][j];
         if (temp.getPlayerID()[0] == -1 && temp.getPlayerID()[1] == -1)
@@ -747,7 +766,7 @@ public class Model {
         }
     }
 
-
+    //finds which player has the longest continuous path (using dfs)
     public List<Integer> findLongestPath() {
         int longestPath = 0;
         List<Integer> maxPlayers = new ArrayList<>();
@@ -767,6 +786,7 @@ public class Model {
         }
         int maxLength = Integer.MIN_VALUE;
 
+        //for every player's longest path check who has the maximum path length and add them to the returned list
         for (Map.Entry<Integer, Integer> entry : playersLongestPaths.entrySet()) {
             int playerId = entry.getKey();
             int value = entry.getValue();
@@ -782,10 +802,12 @@ public class Model {
         return maxPlayers;
     }
 
+    //modified version of dfs, returning the longest path of a specific player
     private int dfsL(boolean[] visited, int source, int player) {
         visited[source] = true;
         int maxLength = 0;
 
+        //going ob=ver every vertex
         for (int i = 0; i < NUM_OF_CITIES; i++) {
             if (isConnectionExists(source, i, player) && !visited[i]) {
                 int pathLength = board[source][i].getWeight() + dfsL(visited, i, player);
@@ -798,5 +820,4 @@ public class Model {
         visited[source] = false;
         return maxLength;
     }
-
 }

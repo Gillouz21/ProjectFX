@@ -28,27 +28,28 @@ import java.util.Map;
 
 public class Main extends Application implements IView {
     private IPresenter presenter;
-    private ArrayList<Pane> routePanes = new ArrayList<>();
-    private ArrayList<Pane> routeCardPanes = new ArrayList<>();
-    private ArrayList<Pane> wagonCardPanes = new ArrayList<>();
-    private int[] optionalWagonCards = new int[5];
-    private ArrayList<Pane> playersWagonCardPanes = new ArrayList<>();
-    private Pane pointsPane;
-    private Pane BotsMovePane;
-    private Pane wagonsLeft;
-    private Label lastTurnLabel;
-    private ListView<String> playersRouteCards;
-    private ArrayList<Pane> generalPanes = new ArrayList<>();
-    private static String ID_PREFIX = "#Route";
-    boolean isDeckClicked = false;
-    boolean firstChoice = false;
-    int pathIndex = -1;
-    int firstTurnChoices = 0;
-    int numOfChosenCards = 0;
-    ArrayList<Route> optionalRouteCards = new ArrayList<Route>();
-    private Map<Integer, Image> wagonsImages = new HashMap<Integer ,Image>(); //{WHITE, BLUE, YELLOW, PURPLE, ORANGE, BLACK, RED, GREEN, JOKER}
-    Stage primaryStage;
+    private ArrayList<Pane> routePanes = new ArrayList<>();                           //panes to interact with the routes on the board
+    private ArrayList<Pane> routeCardPanes = new ArrayList<>();                       //panes to interact with the route cards
+    private ArrayList<Pane> wagonCardPanes = new ArrayList<>();                       //panes to interact with the wagon cards
+    private ArrayList<Pane> playersWagonCardPanes = new ArrayList<>();                //panes to interact with the players wagon cards
+    private ArrayList<Pane> generalPanes = new ArrayList<>();                         //list of all of the panes
+    private Pane pointsPane;                                                          //pane of the points presented on the screen
+    private Pane BotsMovePane;                                                        //pane that shows the bots moves
+    private Pane wagonsLeft;                                                          //pane of the wagons left presented on the screen
+    private int[] optionalWagonCards = new int[5];                                    //color code of the open wagon cards
+    private Label lastTurnLabel;                                                      //pane of the last turn message
+    private ListView<String> playersRouteCards;                                       //list view of the destination cards the user holds
+    private static String ID_PREFIX = "#Route";                                       //prefix of all of the route panes
+    boolean isDeckClicked = false;                                                    //boolean flag
+    boolean firstChoice = false;                                                      //boolean flag
+    int pathIndex = -1;                                                               //index of the route pane that is clicked by the user
+    int firstTurnChoices = 0;                                                         //destination cards picked counter for the first turn
+    int numOfChosenCards = 0;                                                         //wagon cards picked counter
+    ArrayList<Route> optionalRouteCards = new ArrayList<Route>();                     //the optional route cards corresponding to the RouteCardPanes
+    private Map<Integer, Image> wagonsImages = new HashMap<Integer ,Image>();         //images corresponding to the color code: {WHITE, BLUE, YELLOW, PURPLE, ORANGE, BLACK, RED, GREEN, JOKER}
+    Stage primaryStage;                                                               //the primary window stage
 
+    //initializing every part of the system and starting the main screen
     @Override
     public void start(Stage primaryStage) throws Exception{
         this.presenter = new Presenter(this);
@@ -58,32 +59,22 @@ public class Main extends Application implements IView {
         primaryStage.setTitle("Ticket To Ride");
 
         Scene s = new Scene(root);
-
         insertRoutePanes(s);
-
         initWagonImages();
+        insertTextPanes(s);
         insertCardPanes(s);
-
         initOptionalWagonCards();
-
 
         //passing the routes to the model so it could insert them to the board
         presenter.passPanes(routePanes);
 
-
-
-
-
         setMouseClicksLister();
-
         primaryStage.setScene(s);
-
-
-
         primaryStage.show();
     }
 
-    private void initWagonImages() { //{WHITE, BLUE, YELLOW, PURPLE, ORANGE, BLACK, RED, GREEN, JOKER}
+    //{WHITE, BLUE, YELLOW, PURPLE, ORANGE, BLACK, RED, GREEN, JOKER}
+    private void initWagonImages(){
         wagonsImages.put(0, new Image("C:\\Users\\User\\IdeaProjects\\ProjectFX\\src\\sample\\WHITE.jpg"));
         wagonsImages.put(1, new Image("C:\\Users\\User\\IdeaProjects\\ProjectFX\\src\\sample\\BLUE.jpg"));
         wagonsImages.put(2, new Image("C:\\Users\\User\\IdeaProjects\\ProjectFX\\src\\sample\\YELLOW.jpg"));
@@ -95,6 +86,7 @@ public class Main extends Application implements IView {
         wagonsImages.put(8, new Image("C:\\Users\\User\\IdeaProjects\\ProjectFX\\src\\sample\\JOKER.jpg"));
     }
 
+    //presenting the optional wagon cards
     public void initOptionalWagonCards() {
         int key, i = 0;
         for (Pane p : wagonCardPanes
@@ -109,6 +101,7 @@ public class Main extends Application implements IView {
         }
     }
 
+    //inserting every route to the array list of the route panes
     private void insertRoutePanes(Scene s) {
         String str, numPref ;
         Pane p = (Pane) s.lookup(ID_PREFIX+"00");
@@ -126,7 +119,8 @@ public class Main extends Application implements IView {
         }
     }
 
-    private void insertCardPanes(Scene s){
+    //inserting the text related panes and card decks
+    private void insertTextPanes(Scene s){
         Pane p = (Pane) s.lookup("#WagonDeck");
         generalPanes.add(p);
         p = (Pane) s.lookup("#RouteDeck");
@@ -154,6 +148,11 @@ public class Main extends Application implements IView {
             temp.setText(String.format("Player %d: %d Wagons Left", i, presenter.getModel().NUM_OF_WAGONS));
         }
 
+    }
+
+    //inserting every cards to the array lists
+    private void insertCardPanes(Scene s){
+        Pane p;
         for (int i = 0; i < 3; i++) {
             p = (Pane) s.lookup("#RouteCard" + i);
             routeCardPanes.add(p);
@@ -180,6 +179,7 @@ public class Main extends Application implements IView {
         }
     }
 
+    //changing the color and shape of an occupied route
     public void changeColor(int index, Color color){
         Pane parent = routePanes.get(index);
 
@@ -196,6 +196,7 @@ public class Main extends Application implements IView {
         }
     }
 
+    //the function that handles every users click
     private void setMouseClicksLister() {
         for (Pane p:generalPanes
              ) {
@@ -204,7 +205,8 @@ public class Main extends Application implements IView {
                 public void handle(MouseEvent mouseEvent) {
                     Pane pane = (Pane)mouseEvent.getSource();
 
-                    if(pane.getId().matches("^Route\\d{2}$") && !isDeckClicked && !firstChoice && pathIndex == -1 && firstTurnChoices >=2 ) //if Route was clicked
+                    //if Route clicked
+                    if(pane.getId().matches("^Route\\d{2}$") && !isDeckClicked && !firstChoice && pathIndex == -1 && firstTurnChoices >=2 )
                     {
                         int index = Integer.valueOf(pane.getId().split("e")[1]);
 
@@ -212,17 +214,20 @@ public class Main extends Application implements IView {
                             pathIndex = index;
 
                     }
+
+                    //if route deck clicked
                     else if (pane.getId().matches("RouteDeck") && !isDeckClicked && !firstChoice && pathIndex == -1 && presenter.getModel().routeQueue.size() > 0)
                     {
                         optionalRouteCards = presenter.routeDeckClicked();
                         isDeckClicked = true;
 
                     }
+
+                    //if route card clicked
                     else if(pane.getId().matches("RouteCard\\d+") && !firstChoice)
                     {
                         int index = Integer.valueOf(pane.getId().split("d")[1]);
 
-                        // pass index to presenter...
                         presenter.insertRouteToPlayerRouteList(optionalRouteCards.get(index));
                         optionalRouteCards.set(index, null);
                         routeCardPanes.get(index).setVisible(false);
@@ -238,7 +243,10 @@ public class Main extends Application implements IView {
 
                         updatePlayersListView();
                     }
-                    else if(pane.getId().matches("RouteCardEnd")  && firstTurnChoices >=2 ){
+
+                    //if finished picking route cards
+                    else if(pane.getId().matches("RouteCardEnd")  && firstTurnChoices >=2 )
+                    {
                         presenter.insertRouteQueue(optionalRouteCards);
                         hideRouteCards(routeCardPanes);
                         isDeckClicked = false;
@@ -256,7 +264,10 @@ public class Main extends Application implements IView {
 
 
                     }
-                    else if (pane.getId().matches("WagonDeck") && !isDeckClicked && pathIndex == -1 && !presenter.getModel().wagonStack.isEmpty()&& firstTurnChoices >=2 ) {
+
+                    //if wagon deck clicked
+                    else if (pane.getId().matches("WagonDeck") && !isDeckClicked && pathIndex == -1 && !presenter.getModel().wagonStack.isEmpty()&& firstTurnChoices >=2 )
+                    {
                         int index = presenter.getWagonCard();
                         presenter.addWagonCard(index);
                         updateWagonLabel(index);
@@ -270,7 +281,10 @@ public class Main extends Application implements IView {
                         }
                         firstChoice = !firstChoice;
                     }
-                    else if(pane.getId().matches("Wagon\\d+") && !isDeckClicked && pathIndex == -1 && firstTurnChoices >=2  ){
+
+                    //if optional wagon card clicked
+                    else if(pane.getId().matches("Wagon\\d+") && !isDeckClicked && pathIndex == -1 && firstTurnChoices >=2  )
+                    {
                         int paneIndex = Integer.valueOf(pane.getId().split("n")[1]);
                         int index = optionalWagonCards[paneIndex];
 
@@ -280,11 +294,11 @@ public class Main extends Application implements IView {
                               presenter.addWagonCard(index);
                               updateWagonLabel(index);
                               if (presenter.getModel().wagonStack.isEmpty()){
-                                  removePossibleWagon(paneIndex);
+                                  removeOptionalWagon(paneIndex);
                                   optionalWagonCards[paneIndex] = -1;
                               }
                               else
-                                  updatePossibleWagon(paneIndex, presenter.getWagonCard());
+                                  updateOptionalWagon(paneIndex, presenter.getWagonCard());
 
 
                               checkIfEnd();
@@ -299,11 +313,11 @@ public class Main extends Application implements IView {
                             presenter.addWagonCard(index);
                             updateWagonLabel(index);
                             if (presenter.getModel().wagonStack.isEmpty()) {
-                                removePossibleWagon(paneIndex);
+                                removeOptionalWagon(paneIndex);
                                 optionalWagonCards[paneIndex] = -1;
                             }
                             else
-                                updatePossibleWagon(paneIndex, presenter.getWagonCard());
+                                updateOptionalWagon(paneIndex, presenter.getWagonCard());
                             if (firstChoice) {
                                 checkIfEnd();
                                 presenter.getModel().nextPlayer();
@@ -320,7 +334,10 @@ public class Main extends Application implements IView {
                         }
 
                     }
-                    else if(pane.getId().matches("PlayersWagon\\d+") && pathIndex != -1){
+
+                    //if players wagon card clicked
+                    else if(pane.getId().matches("PlayersWagon\\d+") && pathIndex != -1)
+                    {
                         int playerWagonCardID = Integer.valueOf(pane.getId().split("n")[1]);
                         if((playerWagonCardID == presenter.getModel().getPathColorCode(pathIndex) || playerWagonCardID == 8)  && presenter.getModel().getPlayer().getCards()[playerWagonCardID] > 0){
                             presenter.useWagonCard(playerWagonCardID);
@@ -343,23 +360,25 @@ public class Main extends Application implements IView {
                             presenter.botMove();
                         }
                     }
-
                 }
             });
         }
     }
 
-    public void updatePossibleWagon(int pI, int key) {
+    //updating the optional wagon card
+    public void updateOptionalWagon(int pI, int key) {
         ImageView img = (ImageView) wagonCardPanes.get(pI).getChildren().get(0);
         img.setImage(wagonsImages.get(key));
         optionalWagonCards[pI] = key;
     }
 
-    public void removePossibleWagon(int paneIndex){
+    //removing the optional wagon card (if the cad deck is empty)
+    public void removeOptionalWagon(int paneIndex){
         Pane p = wagonCardPanes.get(paneIndex);
         p.setVisible(false);
     }
 
+    //is the wagon deck empty
     public boolean isWagonStackFinished(){
         Boolean allDone = true;
         for (Pane pane : wagonCardPanes) {
@@ -370,13 +389,14 @@ public class Main extends Application implements IView {
         return allDone;
     }
 
+    //updating the amount of a specific wagon card a player has
     private void updateWagonLabel(int index) {
         Pane p = playersWagonCardPanes.get(index);
         Label l = (Label)  p.getChildren().get(1);
         l.setText(Integer.toString(presenter.getModel().getPLAYER_ARR()[0].getCards()[index]));
     }
 
-
+    //presenting the optional route cards
     public void showRouteCard(ArrayList<Route> r){
         Pane p;
         for (int i = 0; i < r.size(); i++)
@@ -401,11 +421,13 @@ public class Main extends Application implements IView {
         }
     }
 
+    //presenting the end button to end the route cards picking
     public void showRouteEndOption(){
         Pane p = routeCardPanes.get(3);
         p.setVisible(true);
     }
 
+    //hiding the route cards
     private void hideRouteCards(ArrayList<Pane> routeCardPanes) {
         for (Pane p : routeCardPanes)
         {
@@ -413,6 +435,7 @@ public class Main extends Application implements IView {
         }
     }
 
+    //update the point labels
     public void updatePointLabels(){
         Player currP = presenter.getModel().getPlayer();
         int points = currP.getPoints();
@@ -422,20 +445,23 @@ public class Main extends Application implements IView {
 
     }
 
+    //updating the bots label (presenting bot moves)
     public void updateBotsMove(String s){
         Label l = (Label) BotsMovePane.getChildren().get(0);
         l.setText(s);
     }
 
+    //getting the optional wagon cards currently presented on the screen
     public int[] getOptionalWagonCards(){
         return optionalWagonCards;
     }
 
+    //updating the optional wagon cards (logical)
     public void setOptionalWagonCards(int[] optionalWagonCards){
         this.optionalWagonCards = optionalWagonCards;
     }
 
-
+    //updating the list of route cards the player has
     public void updatePlayersListView(){
         playersRouteCards.getItems().clear();
         for (Route r: presenter.getModel().getPLAYER_ARR()[0].getRouteList()
@@ -448,7 +474,7 @@ public class Main extends Application implements IView {
 
     }
 
-
+    //showing the ending screen with the results of the game
     public void showEndingScreen( ) {
         String message = presenter.getModel().whoWon();
         Stage endingStage = new Stage();
@@ -473,10 +499,12 @@ public class Main extends Application implements IView {
         primaryStage.hide();
     }
 
+    //presenting a message for a last turn for every player
     public void showLastTurn(){
         lastTurnLabel.setText("Last Turn for every player!");
     }
 
+    //updating the wagons left counter for each player
     public void updateWagonsLeft(){
         for (int i = 0; i < presenter.getModel().NUM_OF_PLAYERS; i++) {
             Label temp = (Label) wagonsLeft.getChildren().get(i);
@@ -484,7 +512,7 @@ public class Main extends Application implements IView {
         }
     }
 
-
+    //has the game ended or not
     public void checkIfEnd(){
         if(presenter.getModel().lastTurn) {
             presenter.getModel().lastTurnCounter--;

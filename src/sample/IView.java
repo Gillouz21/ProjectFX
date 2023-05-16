@@ -10,8 +10,8 @@ public interface IView {
     void showRouteCard(ArrayList<Route> r);
     void updateBotsMove(String s);
     int[] getOptionalWagonCards();
-    void updatePossibleWagon(int pI, int key);
-    void removePossibleWagon(int paneIndex);
+    void updateOptionalWagon(int pI, int key);
+    void removeOptionalWagon(int paneIndex);
     void setOptionalWagonCards(int[] optionalWagonCards);
     void updatePointLabels();
     void initOptionalWagonCards();
